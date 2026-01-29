@@ -148,7 +148,7 @@ const App: React.FC = () => {
       case 'HISTORY': return <HistoryScreen navigate={navigateTo} userRole={userRole || undefined} />;
       case 'MATERIAL_REG': return <MaterialRegistration navigate={navigateTo} />;
       case 'ROUTES_MAP': return <RoutesScreen navigate={navigateTo} userRole={userRole || undefined} />;
-      case 'PROFILE': return <ProfileScreen navigate={navigateTo} onLogout={handleLogout} userRole={userRole || 'associate'} />;
+      case 'PROFILE': return <ProfileScreen navigate={navigateTo} onLogout={handleLogout} userRole={userRole || 'associate'} userName={userName} />;
       case 'SETTINGS': return <SettingsScreen navigate={navigateTo} onBack={() => navigateTo(prevScreen)} />;
       case 'NOTIFICATIONS': return <NotificationsScreen navigate={navigateTo} onBack={() => navigateTo(prevScreen)} />;
       default: return <LoginScreen onLogin={handleLogin} />;
