@@ -101,12 +101,18 @@ const AssociateDashboard: React.FC<AssociateDashboardProps> = ({ navigate, userN
         </section>
       </main>
 
-      <nav className="flex-none w-full border-t border-gray-100 bg-white p-4 pb-6 z-30 flex justify-around">
-        <button onClick={() => navigate('ASSOCIATE_DASHBOARD')} className="flex flex-col items-center gap-1 text-[#10c65c]">
+      <nav className="flex-none w-full border-t border-gray-100 bg-white p-4 pb-6 z-30 flex justify-around" style={{ touchAction: 'none' }}>
+        <button
+          onClick={(e) => { e.preventDefault(); navigate('ASSOCIATE_DASHBOARD'); }}
+          className="flex flex-col items-center gap-1 text-[#10c65c]"
+        >
           <span className="material-symbols-outlined filled-icon">home</span>
           <span className="text-[10px] font-bold">Início</span>
         </button>
-        <button onClick={() => navigate('PROFILE')} className="flex flex-col items-center gap-1 text-gray-300">
+        <button
+          onClick={(e) => { e.preventDefault(); navigate('PROFILE'); }}
+          className="flex flex-col items-center gap-1 text-gray-300"
+        >
           <span className="material-symbols-outlined">person</span>
           <span className="text-[10px] font-medium">Perfil</span>
         </button>

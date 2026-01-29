@@ -132,22 +132,34 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ navigate, userName, u
       </main>
 
       {/* Driver Nav */}
-      <nav className="flex-none w-full border-t border-gray-100 bg-white p-4 pb-6 z-30 flex justify-between">
-        <button onClick={() => navigate('ROUTES_MAP')} className="flex flex-col items-center gap-1 px-4 text-[#10c65c]">
+      <nav className="flex-none w-full border-t border-gray-100 bg-white p-4 pb-6 z-30 flex justify-between" style={{ touchAction: 'none' }}>
+        <button
+          onClick={(e) => { e.preventDefault(); navigate('ROUTES_MAP'); }}
+          className="flex flex-col items-center gap-1 px-4 text-[#10c65c]"
+        >
           <div className="bg-[#10c65c]/10 rounded-full h-8 w-12 flex items-center justify-center">
             <span className="material-symbols-outlined filled-icon">map</span>
           </div>
           <span className="text-[10px] font-bold">Rotas</span>
         </button>
-        <button onClick={() => navigate('HISTORY')} className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors">
+        <button
+          onClick={(e) => { e.preventDefault(); navigate('HISTORY'); }}
+          className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
+        >
           <span className="material-symbols-outlined">history</span>
           <span className="text-[10px] font-medium">Histórico</span>
         </button>
-        <button onClick={() => navigate('NOTIFICATIONS')} className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors">
+        <button
+          onClick={(e) => { e.preventDefault(); navigate('NOTIFICATIONS'); }}
+          className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
+        >
           <span className="material-symbols-outlined">notifications</span>
           <span className="text-[10px] font-medium">Avisos</span>
         </button>
-        <button onClick={() => navigate('PROFILE')} className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors">
+        <button
+          onClick={(e) => { e.preventDefault(); navigate('PROFILE'); }}
+          className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
+        >
           <span className="material-symbols-outlined">person</span>
           <span className="text-[10px] font-medium">Perfil</span>
         </button>
