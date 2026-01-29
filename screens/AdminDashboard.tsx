@@ -10,7 +10,7 @@ interface AdminDashboardProps {
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, userLogo }) => {
   return (
-    <div className="fixed inset-0 flex flex-col overflow-hidden bg-[#f6f8f7]">
+    <div className="fixed inset-0 no-scrollbar flex flex-col overflow-hidden bg-[#f6f8f7]">
       {/* Header */}
       <header className="flex-none flex items-center justify-between p-5 pb-2 bg-[#f6f8f7]/95 backdrop-blur-sm z-20">
         <div className="flex items-center gap-3" onClick={() => navigate('PROFILE')}>
@@ -29,7 +29,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
         </button>
       </header>
 
-      <main className="flex-1 overflow-y-auto no-scrollbar pb-24">
+      <main className="flex-1 overflow-y-auto pb-24">
         {/* Stats */}
         <section className="p-5 grid grid-cols-3 gap-3">
           {[
