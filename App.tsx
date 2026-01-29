@@ -156,8 +156,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background-light flex justify-center">
-      <div className="w-full bg-white min-h-screen relative overflow-hidden animate-page">
+    <div className="h-screen w-screen bg-background-light flex justify-center overflow-hidden">
+      <div className="w-full bg-white h-full relative overflow-hidden animate-page">
         {renderScreen()}
       </div>
     </div>

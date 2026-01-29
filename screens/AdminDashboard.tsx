@@ -96,7 +96,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
 
       {/* Bottom Nav */}
       {/* Bottom Nav */}
-      <nav className="flex w-full border-t border-gray-100 bg-white p-4 pb-6 z-30 flex justify-between" style={{ touchAction: 'none' }}>
+      <nav className="flex-none w-full border-t border-gray-100 bg-white p-4 pb-6 z-30 flex justify-between" style={{ touchAction: 'none' }}>
         <button
           onClick={(e) => { e.preventDefault(); navigate('ADMIN_DASHBOARD'); }}
           className="flex flex-col items-center gap-1 px-4"
