@@ -137,7 +137,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onRegister }) => {
 
         {/* Association Selector */}
         <div className="flex flex-col gap-2">
-          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Entrar na Associação</label>
+          <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Escolha a Associação</label>
           <AssociationSelect
             value={selectedAssoc}
             onChange={setSelectedAssoc}
@@ -208,11 +208,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onRegister }) => {
           </div>
         )}
 
-        <div className="flex justify-end mt-[-10px]">
-          <button type="button" className="text-xs font-bold text-[#10c65c] hover:underline" onClick={onRegister}>
-            Registrar
-          </button>
-        </div>
+
 
         <button
           type="submit"
@@ -228,6 +224,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onRegister }) => {
             </>
           )}
         </button>
+
+        <div className="flex justify-center mt-[10px]">
+          <button type="button" className="text-xs font-bold text-[#10c65c] hover:underline" onClick={onRegister}>
+            Registrar
+          </button>
+        </div>
+
       </form>
 
       <div className="mt-auto py-6 flex items-center gap-2 text-xs font-bold text-gray-300 uppercase tracking-widest">

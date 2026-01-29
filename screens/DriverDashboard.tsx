@@ -10,7 +10,7 @@ interface DriverDashboardProps {
 
 const DriverDashboard: React.FC<DriverDashboardProps> = ({ navigate, userName, userLogo }) => {
   return (
-    <div className="flex flex-col h-full bg-[#f6f8f7]">
+    <div className="flex flex-col h-screen overflow-hidden bg-[#f6f8f7]">
       {/* Header */}
       <header className="p-4 flex items-center justify-between sticky top-0 bg-[#f6f8f7]/95 backdrop-blur-sm z-20 border-b border-gray-100">
         <div className="flex items-center gap-3" onClick={() => navigate('PROFILE')}>

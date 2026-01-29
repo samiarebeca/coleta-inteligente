@@ -30,7 +30,7 @@ const AssociateDashboard: React.FC<AssociateDashboardProps> = ({ navigate, userN
   }).join(', ');
 
   return (
-    <div className="flex flex-col h-full bg-[#f6f8f7]">
+    <div className="flex flex-col h-screen overflow-hidden bg-[#f6f8f7]">
       <header className="p-4 pt-6 flex items-center justify-between sticky top-0 bg-[#f6f8f7]/95 backdrop-blur-sm z-20">
         <div className="flex items-center gap-3" onClick={() => navigate('PROFILE')}>
           <div className="relative size-12 rounded-full border-2 border-[#10c65c] bg-cover bg-center cursor-pointer"
