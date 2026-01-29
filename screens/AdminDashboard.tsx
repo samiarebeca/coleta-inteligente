@@ -10,9 +10,9 @@ interface AdminDashboardProps {
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, userLogo }) => {
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-[#f6f8f7]">
+    <div className="fixed inset-0 flex flex-col overflow-hidden bg-[#f6f8f7]">
       {/* Header */}
-      <header className="fixed-none flex items-center justify-between p-5 pb-2 bg-[#f6f8f7]/95 backdrop-blur-sm z-20">
+      <header className="flex-none flex items-center justify-between p-5 pb-2 bg-[#f6f8f7]/95 backdrop-blur-sm z-20">
         <div className="flex items-center gap-3" onClick={() => navigate('PROFILE')}>
           <div className="relative size-12 rounded-full border-2 border-[#13ec6d] bg-cover bg-center cursor-pointer"
             style={{ backgroundImage: `url("${userLogo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzEwYzY1YyI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgM2MxLjY2IDAgMyAxLjM0IDMgM3MtMS4zNCAzLTMgMy0zLTEuMzQtMy0zIDEuMzQtMyAzLTN6bTAgMTQuMmMtMi41IDAtNC43MS0xLjI4LTYtMy4yMi4wMy0xLjk5IDQtMy4wOCA2LTMuMDggMS45OSAwIDUuOTcgMS4wOSA2IDMuMDgtMS4yOSAxLjk0LTMuNSAzLjIyLTYgMy4yMnoiLz48L3N2Zz4='}")` }}>
