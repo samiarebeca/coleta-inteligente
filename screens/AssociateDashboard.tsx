@@ -31,7 +31,7 @@ const AssociateDashboard: React.FC<AssociateDashboardProps> = ({ navigate, userN
 
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-[#f6f8f7]">
-      <header className="flex-none p-4 pt-6 flex items-center justify-between bg-[#f6f8f7]/95 backdrop-blur-sm z-20">
+      <header className="flex-none p-4 pt-6 flex items-center justify-between bg-[#f6f8f7]/95 backdrop-blur-sm z-20" style={{ touchAction: 'none' }}>
         <div className="flex items-center gap-3" onClick={() => navigate('PROFILE')}>
           <div className="relative size-12 rounded-full border-2 border-[#10c65c] bg-cover bg-center cursor-pointer"
             style={{ backgroundImage: `url("${userLogo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzEwYzY1YyI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgM2MxLjY2IDAgMyAxLjM0IDMgM3MtMS4zNCAzLTMgMy0zLTEuMzQtMy0zIDEuMzQtMyAzLTN6bTAgMTQuMmMtMi41IDAtNC43MS0xLjI4LTYtMy4yMi4wMy0xLjk5IDQtMy4wOCA2LTMuMDggMS45OSAwIDUuOTcgMS4wOSA2IDMuMDgtMS4yOSAxLjk0LTMuNSAzLjIyLTYgMy4yMnoiLz48L3N2Zz4='}")` }}>
