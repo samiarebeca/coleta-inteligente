@@ -76,7 +76,7 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigate, onBack }) => 
               <div className="size-10 bg-[#10c65c] rounded-lg"></div>
             </div>
             <h3 className="font-extrabold text-gray-800">Coleta Inteligente App</h3>
-            <p className="text-xs font-bold text-gray-400">Versão 1.0.2 (Build 450)</p>
+            <p className="text-xs font-bold text-gray-400">Versão 1.0.0 (Build 1)</p>
           </div>
         </section>
       </main>
