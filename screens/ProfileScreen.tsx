@@ -29,7 +29,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigate, onLogout, userR
 
   return (
     <div className="flex flex-col h-full bg-[#f6f8f7] pb-24">
-      <header className="sticky top-0 bg-[#f6f8f7]/95 backdrop-blur-sm p-4 flex items-center justify-between z-20">
+      <header className="sticky top-0 bg-[#f6f8f7]/95 backdrop-blur-sm p-4 flex items-center justify-between z-20" style={{ touchAction: 'none' }}>
         <button onClick={() => navigate(userRole === 'admin' ? 'ADMIN_DASHBOARD' : userRole === 'driver' ? 'DRIVER_DASHBOARD' : 'ASSOCIATE_DASHBOARD')} className="size-10 rounded-full hover:bg-black/5 flex items-center justify-center">
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
@@ -39,7 +39,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigate, onLogout, userR
         </button>
       </header>
 
-      <main className="p-4 flex flex-col gap-6 overflow-y-auto no-scrollbar">
+      <main className="p-4 flex flex-col gap-6 overflow-y-auto no-scrollbar overscroll-y-none">
         {/* Profile Card */}
         <section className="bg-white p-6 rounded-3xl border border-gray-50 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
           <div className="absolute top-0 w-full h-24 bg-gradient-to-b from-[#10c65c]/10 to-transparent"></div>

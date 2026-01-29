@@ -110,7 +110,7 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ navigate, onSuc
     };
 
     return (
-        <div className="flex flex-col h-full min-h-screen items-center justify-center p-8 bg-[#f6f8f7]">
+        <div className="flex flex-col h-full min-h-screen items-center justify-center p-8 bg-[#f6f8f7] overscroll-y-none">
             <div className="mb-6 flex flex-col items-center w-full">
                 <h1 className="text-[24px] font-black tracking-tighter text-center text-[#0f1a14] mb-1 uppercase">
                     Nova Conta

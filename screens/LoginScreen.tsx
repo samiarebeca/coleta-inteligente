@@ -117,7 +117,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin, onRegister }) => {
   ];
 
   return (
-    <div className="flex flex-col h-full min-h-screen items-center justify-center p-8 bg-[#f6f8f7]">
+    <div className="flex flex-col h-full min-h-screen items-center justify-center p-8 bg-[#f6f8f7] overscroll-y-none">
       <div className="mb-10 flex flex-col items-center w-full">
         {/* Logo Container */}
         <div className="w-[100px] h-[100px] rounded-3xl bg-white flex items-center justify-center mb-5 shadow-sm border-2 border-[#10c65c]/10 p-4">

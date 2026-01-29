@@ -75,8 +75,8 @@ const App: React.FC = () => {
             }
             // Even if no data, we stop loading
             setLoading(false);
-          })
-          .catch(() => {
+          }, () => {
+            // Handle rejection
             setLoading(false);
           });
       } else {
@@ -157,7 +157,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background-light flex justify-center">
-      <div className="w-full max-w-md bg-white min-h-screen shadow-2xl relative overflow-hidden animate-page">
+      <div className="w-full bg-white min-h-screen relative overflow-hidden animate-page">
         {renderScreen()}
       </div>
     </div>

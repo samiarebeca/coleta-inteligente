@@ -20,14 +20,14 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigate, onBack }) => 
 
   return (
     <div className="flex flex-col h-full bg-[#f6f8f7]">
-      <header className="sticky top-0 bg-white/90 backdrop-blur-md p-4 border-b border-gray-100 flex items-center gap-4 z-20">
+      <header className="sticky top-0 bg-white/90 backdrop-blur-md p-4 border-b border-gray-100 flex items-center gap-4 z-20" style={{ touchAction: 'none' }}>
         <button onClick={onBack} className="size-10 rounded-full hover:bg-black/5 flex items-center justify-center">
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
         <h1 className="text-lg font-bold">Configurações</h1>
       </header>
 
-      <main className="p-4 space-y-6 overflow-y-auto no-scrollbar">
+      <main className="p-4 space-y-6 overflow-y-auto no-scrollbar overscroll-y-none">
         <section>
           <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-2">Geral</h2>
           <div className="bg-white rounded-2xl border border-gray-50 shadow-sm overflow-hidden">

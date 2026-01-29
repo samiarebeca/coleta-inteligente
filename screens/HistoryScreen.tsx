@@ -8,7 +8,7 @@ interface HistoryScreenProps {
 }
 
 const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigate, userRole = 'admin' }) => {
-  
+
   const handleBack = () => {
     if (userRole === 'associate') navigate('ASSOCIATE_DASHBOARD');
     else if (userRole === 'driver') navigate('DRIVER_DASHBOARD');
@@ -17,7 +17,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigate, userRole = 'adm
 
   return (
     <div className="flex flex-col h-full bg-[#f6f8f7] pb-24">
-      <header className="sticky top-0 bg-[#f6f8f7]/95 backdrop-blur-md p-4 flex items-center justify-between z-20">
+      <header className="sticky top-0 bg-[#f6f8f7]/95 backdrop-blur-md p-4 flex items-center justify-between z-20" style={{ touchAction: 'none' }}>
         <button onClick={handleBack} className="size-10 rounded-full hover:bg-black/5 flex items-center justify-center">
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
@@ -30,17 +30,17 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigate, userRole = 'adm
       {/* Filter Tabs - Hide for Driver/Associate to simplify */}
       {userRole === 'admin' && (
         <div className="px-4 py-2 overflow-x-auto no-scrollbar flex gap-3 whitespace-nowrap">
-            <button className="px-5 py-2.5 bg-[#10c65c] text-white rounded-full font-bold text-xs flex items-center gap-2 shadow-md">
+          <button className="px-5 py-2.5 bg-[#10c65c] text-white rounded-full font-bold text-xs flex items-center gap-2 shadow-md">
             <span className="material-symbols-outlined text-[18px]">calendar_today</span>
             Este Mês
-            </button>
-            <button className="px-5 py-2.5 bg-white border border-gray-100 text-gray-500 rounded-full font-bold text-xs">
+          </button>
+          <button className="px-5 py-2.5 bg-white border border-gray-100 text-gray-500 rounded-full font-bold text-xs">
             Mês Passado
-            </button>
+          </button>
         </div>
       )}
 
-      <main className="flex-1 p-4 space-y-8">
+      <main className="flex-1 p-4 space-y-8 overscroll-y-none">
         {/* Total Summary */}
         <section className="bg-white p-8 rounded-3xl border border-gray-50 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 size-24 bg-[#10c65c]/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
@@ -77,7 +77,7 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigate, userRole = 'adm
                   <div>
                     <p className="font-bold text-sm leading-tight">{item.date}</p>
                     <p className="text-[10px] font-bold text-gray-400">
-                        {userRole === 'admin' ? `Operador: ${item.user}` : 'Registrado com sucesso'}
+                      {userRole === 'admin' ? `Operador: ${item.user}` : 'Registrado com sucesso'}
                     </p>
                   </div>
                 </div>
@@ -91,18 +91,18 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigate, userRole = 'adm
         </section>
 
         {userRole === 'admin' && (
-            <div className="flex flex-col items-center gap-4 pt-4">
+          <div className="flex flex-col items-center gap-4 pt-4">
             <button className="text-xs font-bold text-gray-400 uppercase tracking-widest hover:text-[#10c65c]">Carregar mais</button>
             <button onClick={() => navigate('REPORTS')} className="w-full h-14 border-2 border-[#10c65c] text-[#10c65c] rounded-2xl font-bold flex items-center justify-center gap-2">
-                <span className="material-symbols-outlined">bar_chart</span>
-                VER GRÁFICOS
+              <span className="material-symbols-outlined">bar_chart</span>
+              VER GRÁFICOS
             </button>
-            </div>
+          </div>
         )}
       </main>
 
       {/* Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-gray-100 flex justify-between items-center px-6 py-3 z-30">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex justify-between items-center px-6 py-3 z-30" style={{ touchAction: 'none' }}>
         <button onClick={handleBack} className="flex flex-col items-center gap-1 text-gray-300 hover:text-[#10c65c] transition-colors">
           <span className="material-symbols-outlined">home</span>
           <span className="text-[10px] font-bold uppercase tracking-tight">Início</span>
@@ -112,9 +112,9 @@ const HistoryScreen: React.FC<HistoryScreenProps> = ({ navigate, userRole = 'adm
           <span className="text-[10px] font-bold uppercase tracking-tight">Histórico</span>
         </button>
         {userRole !== 'driver' && (
-            <div className="relative -top-8 bg-[#10c65c] size-14 rounded-full flex items-center justify-center text-white shadow-xl shadow-[#10c65c]/30 border-4 border-[#f6f8f7] cursor-pointer active:scale-95 transition-transform" onClick={() => navigate('ENTRY_REG')}>
+          <div className="relative -top-8 bg-[#10c65c] size-14 rounded-full flex items-center justify-center text-white shadow-xl shadow-[#10c65c]/30 border-4 border-[#f6f8f7] cursor-pointer active:scale-95 transition-transform" onClick={() => navigate('ENTRY_REG')}>
             <span className="material-symbols-outlined text-3xl">qr_code_scanner</span>
-            </div>
+          </div>
         )}
         <button onClick={() => navigate('NOTIFICATIONS')} className="flex flex-col items-center gap-1 text-gray-300 hover:text-[#10c65c] transition-colors">
           <span className="material-symbols-outlined">notifications</span>
