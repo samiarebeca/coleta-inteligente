@@ -29,7 +29,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
         </button>
       </header>
 
-      <main className="flex-1 overflow-y-auto pb-24">
+      <main className="flex-1 overflow-y-auto pb-24 overscroll-y-none">
         {/* Stats */}
         <section className="p-5 grid grid-cols-3 gap-3">
           {[

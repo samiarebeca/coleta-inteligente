@@ -47,7 +47,7 @@ const AssociateDashboard: React.FC<AssociateDashboardProps> = ({ navigate, userN
         </button>
       </header>
 
-      <main className="flex-1 px-4 py-6 space-y-6 pb-24 overflow-y-auto no-scrollbar">
+      <main className="flex-1 px-4 py-6 space-y-6 pb-24 overflow-y-auto no-scrollbar overscroll-y-none">
         {/* Gráfico de Produção (Rosca) */}
         <section className="bg-white rounded-3xl shadow-sm p-6 border border-gray-100">
           <p className="text-[#4c9a6c] text-[10px] font-bold uppercase tracking-widest mb-4">Produção por Material</p>
