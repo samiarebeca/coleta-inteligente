@@ -12,7 +12,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ navigate, userName, u
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[#f6f8f7]">
       {/* Header */}
-      <header className="p-4 flex items-center justify-between sticky top-0 bg-[#f6f8f7]/95 backdrop-blur-sm z-20 border-b border-gray-100">
+      <header className="flex-none p-4 flex items-center justify-between bg-[#f6f8f7]/95 backdrop-blur-sm z-20 border-b border-gray-100">
         <div className="flex items-center gap-3" onClick={() => navigate('PROFILE')}>
           <div className="size-10 rounded-full border-2 border-[#10c65c] bg-cover bg-center"
             style={{ backgroundImage: `url("${userLogo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzEwYzY1YyI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgM2MxLjY2IDAgMyAxLjM0IDMgM3MtMS4zNCAzLTMgMy0zLTEuMzQtMy0zIDEuMzQtMyAzLTN6bTAgMTQuMmMtMi41IDAtNC43MS0xLjI4LTYtMy4yMi4wMy0xLjk5IDQtMy4wOCA2LTMuMDggMS45OSAwIDUuOTcgMS4wOSA2IDMuMDgtMS4yOSAxLjk0LTMuNSAzLjIyLTYgMy4yMnoiLz48L3N2Zz4='}")` }}>
@@ -132,7 +132,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ navigate, userName, u
       </main>
 
       {/* Driver Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto border-t border-gray-100 bg-white p-4 pb-6 z-30 flex justify-between">
+      <nav className="flex-none w-full border-t border-gray-100 bg-white p-4 pb-6 z-30 flex justify-between">
         <button onClick={() => navigate('ROUTES_MAP')} className="flex flex-col items-center gap-1 px-4 text-[#10c65c]">
           <div className="bg-[#10c65c]/10 rounded-full h-8 w-12 flex items-center justify-center">
             <span className="material-symbols-outlined filled-icon">map</span>
