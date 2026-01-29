@@ -18,8 +18,6 @@ build
 out
 
 # Local env files
-.env
-.env.*
 !.env.example
 *.local
 
