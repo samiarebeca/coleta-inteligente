@@ -1,12 +1,16 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Screen } from '../App';
+import { supabase } from '../lib/supabaseClient';
 
 interface ReportsScreenProps {
   navigate: (screen: Screen) => void;
 }
 
 const ReportsScreen: React.FC<ReportsScreenProps> = ({ navigate }) => {
+  const [sales, setSales] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
   // Dados para as barras de progresso (Metas)
   const goals = [
     { name: 'Papelão', current: 850, target: 1000, color: 'bg-orange-500' },
@@ -22,6 +26,68 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ navigate }) => {
     { label: 'Alumínio', value: 15, color: '#3b82f6' },
     { label: 'Vidro', value: 10, color: '#a855f7' },
   ];
+
+  useEffect(() => {
+    fetchSales();
+  }, []);
+
+  const fetchSales = async () => {
+    // Join sales with buyers
+    const { data, error } = await supabase
+      .from('sales')
+      .select(`
+            *,
+            buyers (name)
+        `)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching sales report', error);
+    } else {
+      setSales(data);
+    }
+  };
+
+  const handleExportCSV = () => {
+    if (sales.length === 0) {
+      alert("Sem dados para exportar.");
+      return;
+    }
+
+    // Cabecalho
+    const headers = ["Data", "Material", "Subclasse", "Peso (kg)", "Preço/kg (R$)", "Total (R$)", "Comprador"];
+
+    // Dados
+    const rows = sales.map(s => [
+      new Date(s.created_at).toLocaleDateString() + ' ' + new Date(s.created_at).toLocaleTimeString(),
+      s.material,
+      s.subclass || '-',
+      s.weight,
+      s.price_per_kg,
+      s.total_value,
+      s.buyers?.name || 'N/A'
+    ]);
+
+    // Monta CSV
+    const csvContent = "data:text/csv;charset=utf-8,"
+      + headers.join(",") + "\n"
+      + rows.map(e => e.join(",")).join("\n");
+
+    // Download
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "relatorio_vendas.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleExportPDF = () => {
+    // Simples print pois nao temos lib de PDF
+    alert("A função de PDF irá abrir a janela de impressão. Utilize 'Salvar como PDF'.");
+    window.print();
+  };
 
   // Cálculo do gradiente cônico para o gráfico
   let cumulativePercent = 0;
@@ -105,10 +171,10 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ navigate }) => {
       </main>
 
       <footer className="fixed bottom-0 left-0 right-0 mx-auto p-4 bg-white/95 border-t border-gray-100 z-30 flex gap-2">
-        <button className="flex-1 h-14 bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
-          <span className="material-symbols-outlined">download</span> EXCEL
+        <button onClick={handleExportCSV} className="flex-1 h-14 bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
+          <span className="material-symbols-outlined">download</span> EXCEL (CSV)
         </button>
-        <button className="flex-1 h-14 bg-[#10c65c] text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
+        <button onClick={handleExportPDF} className="flex-1 h-14 bg-[#10c65c] text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
           <span className="material-symbols-outlined">picture_as_pdf</span> PDF
         </button>
       </footer>

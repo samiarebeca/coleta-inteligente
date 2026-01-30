@@ -1,12 +1,14 @@
 
 import React, { useState } from 'react';
 import { Screen } from '../App';
+import { supabase } from '../lib/supabaseClient';
 
 interface BuyerRegistrationProps {
   navigate: (screen: Screen) => void;
 }
 
 const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     company: '',
     contact: '',
@@ -31,14 +33,55 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
     setMaterials(prev => prev.map(m => m.id === id ? { ...m, price } : m));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.company || !form.contact) {
       alert("Por favor, preencha o Nome da Empresa e o Contato.");
       return;
     }
-    // Simulação de salvamento
-    console.log("Comprador Salvo:", { ...form, materials: materials.filter(m => m.active) });
-    navigate('ADMIN_DASHBOARD');
+
+    setLoading(true);
+    try {
+      // 1. Insert Buyer
+      const { data: buyer, error: buyerError } = await supabase
+        .from('buyers')
+        .insert({
+          name: form.company,
+          contact: form.contact,
+          phone: form.phone,
+          active: form.isActive
+        })
+        .select()
+        .single();
+
+      if (buyerError) throw buyerError;
+
+      if (buyer) {
+        // 2. Insert Buyer Materials
+        const activeMaterials = materials.filter(m => m.active);
+        if (activeMaterials.length > 0) {
+          const materialsToInsert = activeMaterials.map(m => ({
+            buyer_id: buyer.id,
+            material_name: m.id,
+            price: parseFloat(m.price) || 0,
+            active: true
+          }));
+
+          const { error: materialsError } = await supabase
+            .from('buyer_materials')
+            .insert(materialsToInsert);
+
+          if (materialsError) throw materialsError;
+        }
+      }
+
+      alert("Comprador cadastrado com sucesso!");
+      navigate('ADMIN_DASHBOARD');
+    } catch (error: any) {
+      console.error("Erro ao salvar:", error);
+      alert("Erro ao salvar comprador: " + (error.message || 'Erro desconhecido'));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const activeMaterials = materials.filter(m => m.active);
@@ -59,12 +102,13 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
             <div className="flex flex-col gap-1">
               <label className="text-xs font-bold text-gray-500 ml-1">Nome da Empresa/Comprador</label>
               <div className="relative">
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={form.company}
-                  onChange={e => setForm({...form, company: e.target.value})}
-                  className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-4 font-bold outline-none focus:border-[#10c65c]" 
-                  placeholder="Ex: Recicla Mais Ltda" 
+                  onChange={e => setForm({ ...form, company: e.target.value })}
+                  className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-4 font-bold outline-none focus:border-[#10c65c]"
+                  placeholder="Ex: Recicla Mais Ltda"
+                  disabled={loading}
                 />
                 <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#10c65c]">business</span>
               </div>
@@ -72,12 +116,13 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
             <div className="flex flex-col gap-1">
               <label className="text-xs font-bold text-gray-500 ml-1">Pessoa de Contato</label>
               <div className="relative">
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={form.contact}
-                  onChange={e => setForm({...form, contact: e.target.value})}
-                  className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-4 font-bold outline-none focus:border-[#10c65c]" 
-                  placeholder="Nome do responsável" 
+                  onChange={e => setForm({ ...form, contact: e.target.value })}
+                  className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-4 font-bold outline-none focus:border-[#10c65c]"
+                  placeholder="Nome do responsável"
+                  disabled={loading}
                 />
                 <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#10c65c]">person</span>
               </div>
@@ -85,12 +130,13 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
             <div className="flex flex-col gap-1">
               <label className="text-xs font-bold text-gray-500 ml-1">Telefone / WhatsApp</label>
               <div className="relative">
-                <input 
-                  type="tel" 
+                <input
+                  type="tel"
                   value={form.phone}
-                  onChange={e => setForm({...form, phone: e.target.value})}
-                  className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-4 font-bold outline-none focus:border-[#10c65c]" 
-                  placeholder="(00) 00000-0000" 
+                  onChange={e => setForm({ ...form, phone: e.target.value })}
+                  className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-4 font-bold outline-none focus:border-[#10c65c]"
+                  placeholder="(00) 00000-0000"
+                  disabled={loading}
                 />
                 <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#10c65c]">call</span>
               </div>
@@ -105,9 +151,10 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
           </div>
           <div className="grid grid-cols-2 gap-3">
             {materials.map((m) => (
-              <button 
-                key={m.id} 
+              <button
+                key={m.id}
                 onClick={() => toggleMaterial(m.id)}
+                disabled={loading}
                 className={`h-14 rounded-2xl border-2 font-bold flex items-center justify-center gap-2 transition-all ${m.active ? 'border-[#10c65c] bg-[#10c65c]/10 text-[#10c65c]' : 'border-gray-100 bg-white text-gray-400'}`}
               >
                 {m.active && <span className="material-symbols-outlined text-[18px]">check_circle</span>}
@@ -129,12 +176,13 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
                   </div>
                   <div className="w-32 h-12 bg-gray-50 rounded-xl border border-gray-100 flex items-center px-3 gap-2 focus-within:border-[#10c65c] focus-within:bg-white transition-colors">
                     <span className="text-[10px] font-bold text-gray-400">R$</span>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       value={m.price}
                       onChange={(e) => updatePrice(m.id, e.target.value)}
-                      className="bg-transparent w-full text-right font-bold outline-none" 
-                      placeholder="0,00" 
+                      className="bg-transparent w-full text-right font-bold outline-none"
+                      placeholder="0,00"
+                      disabled={loading}
                     />
                   </div>
                 </div>
@@ -143,7 +191,7 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
           </section>
         )}
 
-        <section onClick={() => setForm(f => ({...f, isActive: !f.isActive}))} className="bg-white p-5 rounded-3xl border border-gray-50 flex items-center justify-between shadow-sm cursor-pointer active:bg-gray-50 transition-colors">
+        <section onClick={() => !loading && setForm(f => ({ ...f, isActive: !f.isActive }))} className="bg-white p-5 rounded-3xl border border-gray-50 flex items-center justify-between shadow-sm cursor-pointer active:bg-gray-50 transition-colors">
           <div>
             <h3 className="text-lg font-bold">Comprador Ativo</h3>
             <p className="text-xs text-gray-400 font-medium">Habilitar para compra imediata</p>
@@ -155,9 +203,9 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
       </main>
 
       <footer className="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white/90 backdrop-blur-md border-t border-gray-100 z-30">
-        <button onClick={handleSave} className="h-16 w-full bg-[#10c65c] text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg shadow-[#10c65c]/30 active:scale-95 transition-all">
+        <button onClick={handleSave} disabled={loading} className="h-16 w-full bg-[#10c65c] text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg shadow-[#10c65c]/30 active:scale-95 transition-all disabled:opacity-50">
           <span className="material-symbols-outlined">save</span>
-          SALVAR COMPRADOR
+          {loading ? 'SALVANDO...' : 'SALVAR COMPRADOR'}
         </button>
       </footer>
     </div>
