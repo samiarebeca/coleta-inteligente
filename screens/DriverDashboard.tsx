@@ -29,7 +29,7 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ navigate, userName, u
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 flex flex-col gap-6 pb-24 overflow-y-auto no-scrollbar overscroll-y-none">
+      <main className="flex-1 p-4 flex flex-col gap-6 overflow-y-auto no-scrollbar overscroll-y-none">
         {/* Route Card */}
         <section onClick={() => navigate('ROUTES_MAP')}>
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
@@ -129,41 +129,40 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ navigate, userName, u
             </div>
           </div>
         </section>
+        {/* Driver Nav */}
+        <nav className="w-full border-t border-gray-100 bg-white p-4 pb-6 flex justify-between mt-6">
+          <button
+            onClick={(e) => { e.preventDefault(); navigate('ROUTES_MAP'); }}
+            className="flex flex-col items-center gap-1 px-4 text-[#10c65c]"
+          >
+            <div className="bg-[#10c65c]/10 rounded-full h-8 w-12 flex items-center justify-center">
+              <span className="material-symbols-outlined filled-icon">map</span>
+            </div>
+            <span className="text-[10px] font-bold">Rotas</span>
+          </button>
+          <button
+            onClick={(e) => { e.preventDefault(); navigate('HISTORY'); }}
+            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
+          >
+            <span className="material-symbols-outlined">history</span>
+            <span className="text-[10px] font-medium">Histórico</span>
+          </button>
+          <button
+            onClick={(e) => { e.preventDefault(); navigate('NOTIFICATIONS'); }}
+            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
+          >
+            <span className="material-symbols-outlined">notifications</span>
+            <span className="text-[10px] font-medium">Avisos</span>
+          </button>
+          <button
+            onClick={(e) => { e.preventDefault(); navigate('PROFILE'); }}
+            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
+          >
+            <span className="material-symbols-outlined">person</span>
+            <span className="text-[10px] font-medium">Perfil</span>
+          </button>
+        </nav>
       </main>
-
-      {/* Driver Nav */}
-      <nav className="flex-none w-full border-t border-gray-100 bg-white p-4 pb-6 z-30 flex justify-between" style={{ touchAction: 'none' }}>
-        <button
-          onClick={(e) => { e.preventDefault(); navigate('ROUTES_MAP'); }}
-          className="flex flex-col items-center gap-1 px-4 text-[#10c65c]"
-        >
-          <div className="bg-[#10c65c]/10 rounded-full h-8 w-12 flex items-center justify-center">
-            <span className="material-symbols-outlined filled-icon">map</span>
-          </div>
-          <span className="text-[10px] font-bold">Rotas</span>
-        </button>
-        <button
-          onClick={(e) => { e.preventDefault(); navigate('HISTORY'); }}
-          className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-        >
-          <span className="material-symbols-outlined">history</span>
-          <span className="text-[10px] font-medium">Histórico</span>
-        </button>
-        <button
-          onClick={(e) => { e.preventDefault(); navigate('NOTIFICATIONS'); }}
-          className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-        >
-          <span className="material-symbols-outlined">notifications</span>
-          <span className="text-[10px] font-medium">Avisos</span>
-        </button>
-        <button
-          onClick={(e) => { e.preventDefault(); navigate('PROFILE'); }}
-          className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-        >
-          <span className="material-symbols-outlined">person</span>
-          <span className="text-[10px] font-medium">Perfil</span>
-        </button>
-      </nav>
     </div>
   );
 };

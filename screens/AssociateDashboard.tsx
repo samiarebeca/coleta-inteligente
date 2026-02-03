@@ -47,7 +47,7 @@ const AssociateDashboard: React.FC<AssociateDashboardProps> = ({ navigate, userN
         </button>
       </header>
 
-      <main className="flex-1 px-4 py-6 space-y-6 pb-24 overflow-y-auto no-scrollbar overscroll-y-none">
+      <main className="flex-1 px-4 py-6 space-y-6 overflow-y-auto no-scrollbar overscroll-y-none">
         {/* Gráfico de Produção (Rosca) */}
         <section className="bg-white rounded-3xl shadow-sm p-6 border border-gray-100">
           <p className="text-[#4c9a6c] text-[10px] font-bold uppercase tracking-widest mb-4">Produção por Material</p>
@@ -99,24 +99,24 @@ const AssociateDashboard: React.FC<AssociateDashboardProps> = ({ navigate, userN
             })}
           </div>
         </section>
+        {/* Bottom Nav */}
+        <nav className="w-full border-t border-gray-100 bg-white p-4 pb-6 flex justify-around mt-6">
+          <button
+            onClick={(e) => { e.preventDefault(); navigate('ASSOCIATE_DASHBOARD'); }}
+            className="flex flex-col items-center gap-1 text-[#10c65c]"
+          >
+            <span className="material-symbols-outlined filled-icon">home</span>
+            <span className="text-[10px] font-bold">Início</span>
+          </button>
+          <button
+            onClick={(e) => { e.preventDefault(); navigate('PROFILE'); }}
+            className="flex flex-col items-center gap-1 text-gray-300"
+          >
+            <span className="material-symbols-outlined">person</span>
+            <span className="text-[10px] font-medium">Perfil</span>
+          </button>
+        </nav>
       </main>
-
-      <nav className="flex-none w-full border-t border-gray-100 bg-white p-4 pb-6 z-30 flex justify-around" style={{ touchAction: 'none' }}>
-        <button
-          onClick={(e) => { e.preventDefault(); navigate('ASSOCIATE_DASHBOARD'); }}
-          className="flex flex-col items-center gap-1 text-[#10c65c]"
-        >
-          <span className="material-symbols-outlined filled-icon">home</span>
-          <span className="text-[10px] font-bold">Início</span>
-        </button>
-        <button
-          onClick={(e) => { e.preventDefault(); navigate('PROFILE'); }}
-          className="flex flex-col items-center gap-1 text-gray-300"
-        >
-          <span className="material-symbols-outlined">person</span>
-          <span className="text-[10px] font-medium">Perfil</span>
-        </button>
-      </nav>
     </div>
   );
 };

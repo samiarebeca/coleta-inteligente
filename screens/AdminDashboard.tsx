@@ -29,7 +29,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
         </button>
       </header>
 
-      <main className="flex-1 overflow-y-auto pb-24 overscroll-y-none">
+      <main className="flex-1 overflow-y-auto overscroll-y-none">
         {/* Stats */}
         <section className="p-5 grid grid-cols-3 gap-3">
           {[
@@ -92,42 +92,40 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
             ))}
           </div>
         </section>
+        {/* Bottom Nav */}
+        <nav className="w-full border-t border-gray-100 bg-white p-4 pb-6 flex justify-between mt-6">
+          <button
+            onClick={(e) => { e.preventDefault(); navigate('ADMIN_DASHBOARD'); }}
+            className="flex flex-col items-center gap-1 px-4"
+          >
+            <div className="bg-[#13ec6d]/20 rounded-full h-8 w-12 flex items-center justify-center text-[#0eb553]">
+              <span className="material-symbols-outlined filled-icon">home</span>
+            </div>
+            <span className="text-[10px] font-bold">Início</span>
+          </button>
+          <button
+            onClick={(e) => { e.preventDefault(); navigate('ROUTES_MAP'); }}
+            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
+          >
+            <span className="material-symbols-outlined">map</span>
+            <span className="text-[10px] font-medium">Mapa</span>
+          </button>
+          <button
+            onClick={(e) => { e.preventDefault(); navigate('PROFILE'); }}
+            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
+          >
+            <span className="material-symbols-outlined">person</span>
+            <span className="text-[10px] font-medium">Perfil</span>
+          </button>
+          <button
+            onClick={(e) => { e.preventDefault(); navigate('SETTINGS'); }}
+            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
+          >
+            <span className="material-symbols-outlined">settings</span>
+            <span className="text-[10px] font-medium">Config</span>
+          </button>
+        </nav>
       </main>
-
-      {/* Bottom Nav */}
-      {/* Bottom Nav */}
-      <nav className="flex-none w-full border-t border-gray-100 bg-white p-4 pb-6 z-30 flex justify-between" style={{ touchAction: 'none' }}>
-        <button
-          onClick={(e) => { e.preventDefault(); navigate('ADMIN_DASHBOARD'); }}
-          className="flex flex-col items-center gap-1 px-4"
-        >
-          <div className="bg-[#13ec6d]/20 rounded-full h-8 w-12 flex items-center justify-center text-[#0eb553]">
-            <span className="material-symbols-outlined filled-icon">home</span>
-          </div>
-          <span className="text-[10px] font-bold">Início</span>
-        </button>
-        <button
-          onClick={(e) => { e.preventDefault(); navigate('ROUTES_MAP'); }}
-          className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-        >
-          <span className="material-symbols-outlined">map</span>
-          <span className="text-[10px] font-medium">Mapa</span>
-        </button>
-        <button
-          onClick={(e) => { e.preventDefault(); navigate('PROFILE'); }}
-          className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-        >
-          <span className="material-symbols-outlined">person</span>
-          <span className="text-[10px] font-medium">Perfil</span>
-        </button>
-        <button
-          onClick={(e) => { e.preventDefault(); navigate('SETTINGS'); }}
-          className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-        >
-          <span className="material-symbols-outlined">settings</span>
-          <span className="text-[10px] font-medium">Config</span>
-        </button>
-      </nav>
     </div>
   );
 };
