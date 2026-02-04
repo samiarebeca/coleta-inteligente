@@ -151,15 +151,13 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
             <span className="text-xs font-bold text-gray-400 uppercase">Total Estimado</span>
             <span className="text-3xl font-black text-[#10c65c]">R$ {(weight * unitPrice).toFixed(2)}</span>
           </div>
+
+          <button onClick={handleFinalize} disabled={loading} className="h-14 w-full bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-black/20">
+            <span className="material-symbols-outlined">payments</span>
+            {loading ? 'FINALIZANDO...' : 'FINALIZAR VENDA'}
+          </button>
         </div>
       </main>
-
-      <footer className="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white border-t border-gray-100 z-30">
-        <button onClick={handleFinalize} disabled={loading} className="h-16 w-full bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50">
-          <span className="material-symbols-outlined">payments</span>
-          {loading ? 'FINALIZANDO...' : 'FINALIZAR VENDA'}
-        </button>
-      </footer>
     </div>
   );
 };
