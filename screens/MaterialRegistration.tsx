@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Screen } from '../App';
 import { supabase } from '../lib/supabaseClient';
@@ -9,11 +8,23 @@ interface MaterialRegistrationProps {
 
 const MaterialRegistration: React.FC<MaterialRegistrationProps> = ({ navigate }) => {
   const [name, setName] = useState('');
-  const [subclass, setSubclass] = useState('');
+  const [currentSubclass, setCurrentSubclass] = useState('');
+  const [subclasses, setSubclasses] = useState<string[]>([]);
   const [unit, setUnit] = useState('Quilograma (kg)');
   const [price, setPrice] = useState('');
   const [selectedIcon, setSelectedIcon] = useState('recycling');
   const [loading, setLoading] = useState(false);
+
+  const handleAddSubclass = () => {
+    if (currentSubclass.trim()) {
+      setSubclasses([...subclasses, currentSubclass.trim()]);
+      setCurrentSubclass('');
+    }
+  };
+
+  const handleRemoveSubclass = (index: number) => {
+    setSubclasses(subclasses.filter((_, i) => i !== index));
+  };
 
   const handleSave = async () => {
     if (!name) {
@@ -24,7 +35,7 @@ const MaterialRegistration: React.FC<MaterialRegistrationProps> = ({ navigate })
     setLoading(true);
     const { error } = await supabase.from('materials').insert({
       name,
-      subclass: subclass || null,
+      subclasses: subclasses,
       price_per_kg: Number(price) || 0,
       // icon: selectedIcon // If we add icon column later
     });
@@ -36,7 +47,7 @@ const MaterialRegistration: React.FC<MaterialRegistrationProps> = ({ navigate })
     } else {
       alert("Material cadastrado com sucesso!");
       setName('');
-      setSubclass('');
+      setSubclasses([]);
       setPrice('');
     }
   };
@@ -64,14 +75,34 @@ const MaterialRegistration: React.FC<MaterialRegistrationProps> = ({ navigate })
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-bold text-gray-400 ml-1">Subclasse (Opcional)</label>
-            <input
-              type="text"
-              value={subclass}
-              onChange={(e) => setSubclass(e.target.value)}
-              className="w-full h-14 bg-gray-50 border-none rounded-2xl px-4 font-bold outline-none focus:ring-2 focus:ring-[#10c65c] transition-all"
-              placeholder="Ex: Ondulado"
-            />
+            <label className="text-xs font-bold text-gray-400 ml-1">Subclasses (Opcional)</label>
+            <div className="flex gap-2 mb-2">
+              <input
+                type="text"
+                value={currentSubclass}
+                onChange={(e) => setCurrentSubclass(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddSubclass()}
+                className="flex-1 h-14 bg-gray-50 border-none rounded-2xl px-4 font-bold outline-none focus:ring-2 focus:ring-[#10c65c] transition-all"
+                placeholder="Ex: Cristal, Verde..."
+              />
+              <button onClick={handleAddSubclass} className="size-14 bg-[#10c65c] rounded-2xl flex items-center justify-center text-white shadow-md active:scale-95 transition-all">
+                <span className="material-symbols-outlined">add</span>
+              </button>
+            </div>
+
+            {subclasses.length > 0 && (
+              <div className="flex flex-wrap gap-2 animate-page">
+                {subclasses.map((sub, idx) => (
+                  <div key={idx} className="bg-gray-100 px-3 py-1 rounded-lg flex items-center gap-2">
+                    <span className="text-sm font-bold text-gray-700">{sub}</span>
+                    <button onClick={() => handleRemoveSubclass(idx)} className="size-5 rounded-full bg-gray-300 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all">
+                      <span className="material-symbols-outlined text-xs">close</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <p className="text-[10px] text-gray-400 ml-1">Adicione várias subclasses se necessário (ex: Cristal, Verde, Misto)</p>
           </div>
 
           <div className="flex flex-col gap-1">

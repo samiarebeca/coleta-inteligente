@@ -9,22 +9,14 @@ interface SaleRegistrationProps {
 
 const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess }) => {
   const [materials, setMaterials] = useState<any[]>([]);
-  const [selectedMaterial, setSelectedMaterial] = useState('');
-  const [selectedSubclass, setSelectedSubclass] = useState('');
+  const [selectedMaterial, setSelectedMaterial] = useState<any | null>(null); // Store full object
+  const [selectedSubclasses, setSelectedSubclasses] = useState<string[]>([]); // Array
   const [weight, setWeight] = useState(100);
   const [unitPrice, setUnitPrice] = useState(3.50);
 
   const [buyers, setBuyers] = useState<any[]>([]);
   const [selectedBuyerId, setSelectedBuyerId] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const subclasses: Record<string, string[]> = {
-    'PET': ['Cristal', 'Verde', 'Colorido'],
-    'Papelão': ['Ondulado', 'Kraft', 'Misto'],
-    'Alumínio': ['Lata', 'Perfil'],
-    'Plástico': ['PVC', 'PEAD', 'PP', 'PS'],
-    'Vidro': ['Incolor', 'Ambar', 'Verde']
-  };
 
   useEffect(() => {
     // Fetch active buyers
@@ -47,7 +39,8 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
       if (data) {
         setMaterials(data);
         if (data.length > 0) {
-          setSelectedMaterial(data[0].name);
+          // Default to first material, can be removed if specific selection is preferred
+          setSelectedMaterial(data[0]);
         }
       }
     };
@@ -55,6 +48,14 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
     fetchBuyers();
     fetchMaterials();
   }, []);
+
+  const toggleSubclass = (sub: string) => {
+    if (selectedSubclasses.includes(sub)) {
+      setSelectedSubclasses(selectedSubclasses.filter(s => s !== sub));
+    } else {
+      setSelectedSubclasses([...selectedSubclasses, sub]);
+    }
+  };
 
   const handleFinalize = async () => {
     if (!selectedBuyerId) {
@@ -72,8 +73,8 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
         .from('sales')
         .insert({
           buyer_id: selectedBuyerId,
-          material: selectedMaterial,
-          subclass: selectedSubclass,
+          material: selectedMaterial?.name || '',
+          subclass: selectedSubclasses.length > 0 ? selectedSubclasses.join(', ') : null,
           weight: weight,
           price_per_kg: unitPrice,
           total_value: weight * unitPrice
@@ -125,21 +126,26 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
           <h3 className="text-xl font-bold mb-4">Material</h3>
           <div className="grid grid-cols-3 gap-3">
             {materials.map(m => (
-              <button key={m.id} onClick={() => { setSelectedMaterial(m.name); setSelectedSubclass(''); }} className={`h-20 rounded-2xl border-2 font-bold flex flex-col items-center justify-center transition-all ${selectedMaterial === m.name ? 'border-[#10c65c] bg-[#10c65c]/5 text-[#10c65c]' : 'border-gray-100 bg-white text-gray-400'}`}>
+              <button key={m.id} onClick={() => { setSelectedMaterial(m); setSelectedSubclasses([]); }} className={`h-20 rounded-2xl border-2 font-bold flex flex-col items-center justify-center transition-all ${selectedMaterial?.name === m.name ? 'border-[#10c65c] bg-[#10c65c]/5 text-[#10c65c]' : 'border-gray-100 bg-white text-gray-400'}`}>
                 <span className="text-sm">{m.name}</span>
-                {m.subclass && <span className="text-[9px] font-normal opacity-70">{m.subclass}</span>}
+                {/* Optional info */}
               </button>
             ))}
           </div>
         </section>
 
-        {subclasses[selectedMaterial] && (
+        {selectedMaterial && selectedMaterial.subclasses && selectedMaterial.subclasses.length > 0 && (
           <div className="animate-page">
-            <h3 className="text-xs font-bold text-gray-400 uppercase mb-2">Subclassificação ({selectedMaterial})</h3>
+            <h3 className="text-xs font-bold text-gray-400 uppercase mb-2">Subclassificação ({selectedMaterial.name})</h3>
             <div className="flex flex-wrap gap-2">
-              {subclasses[selectedMaterial].map(sub => (
-                <button key={sub} onClick={() => setSelectedSubclass(sub)} className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all ${selectedSubclass === sub ? 'border-[#10c65c] bg-[#10c65c] text-white' : 'border-gray-200 bg-white text-gray-500'}`}>{sub}</button>
-              ))}
+              {selectedMaterial.subclasses.map((sub: string) => {
+                const isSelected = selectedSubclasses.includes(sub);
+                return (
+                  <button key={sub} onClick={() => toggleSubclass(sub)} className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all ${isSelected ? 'border-[#10c65c] bg-[#10c65c] text-white' : 'border-gray-200 bg-white text-gray-500'}`}>
+                    {sub}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
