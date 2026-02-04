@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Screen } from '../App';
 import { supabase } from '../lib/supabaseClient';
 
@@ -16,21 +15,26 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
     isActive: true
   });
 
-  const [materials, setMaterials] = useState([
-    { id: 'Papelão', active: true, price: '' },
-    { id: 'PET', active: false, price: '' },
-    { id: 'Alumínio', active: true, price: '' },
-    { id: 'Cobre', active: false, price: '' },
-    { id: 'Vidro', active: false, price: '' },
-    { id: 'Outros', active: false, price: '' },
-  ]);
+  const [availableMaterials, setAvailableMaterials] = useState<any[]>([]);
+  const [selectedMaterials, setSelectedMaterials] = useState<string[]>([]);
 
-  const toggleMaterial = (id: string) => {
-    setMaterials(prev => prev.map(m => m.id === id ? { ...m, active: !m.active } : m));
+  useEffect(() => {
+    fetchMaterials();
+  }, []);
+
+  const fetchMaterials = async () => {
+    const { data } = await supabase.from('materials').select('*').order('name');
+    if (data) {
+      setAvailableMaterials(data);
+    }
   };
 
-  const updatePrice = (id: string, price: string) => {
-    setMaterials(prev => prev.map(m => m.id === id ? { ...m, price } : m));
+  const toggleMaterial = (id: string) => {
+    setSelectedMaterials(prev =>
+      prev.includes(id)
+        ? prev.filter(m => m !== id)
+        : [...prev, id]
+    );
   };
 
   const handleSave = async () => {
@@ -55,23 +59,20 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
 
       if (buyerError) throw buyerError;
 
-      if (buyer) {
-        // 2. Insert Buyer Materials
-        const activeMaterials = materials.filter(m => m.active);
-        if (activeMaterials.length > 0) {
-          const materialsToInsert = activeMaterials.map(m => ({
-            buyer_id: buyer.id,
-            material_name: m.id,
-            price: parseFloat(m.price) || 0,
-            active: true
-          }));
+      if (buyer && selectedMaterials.length > 0) {
+        // 2. Insert Buyer Materials (Preço removido conforme solicitado)
+        const materialsToInsert = selectedMaterials.map(matName => ({
+          buyer_id: buyer.id,
+          material_name: matName,
+          price: 0, // No specific price for now
+          active: true
+        }));
 
-          const { error: materialsError } = await supabase
-            .from('buyer_materials')
-            .insert(materialsToInsert);
+        const { error: materialsError } = await supabase
+          .from('buyer_materials')
+          .insert(materialsToInsert);
 
-          if (materialsError) throw materialsError;
-        }
+        if (materialsError) throw materialsError;
       }
 
       alert("Comprador cadastrado com sucesso!");
@@ -83,8 +84,6 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
       setLoading(false);
     }
   };
-
-  const activeMaterials = materials.filter(m => m.active);
 
   return (
     <div className="flex flex-col h-full bg-[#f6f8f7] pb-32">
@@ -150,54 +149,29 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
             <p className="text-xs text-gray-400 font-medium">Selecione os materiais que este comprador aceita.</p>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            {materials.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => toggleMaterial(m.id)}
-                disabled={loading}
-                className={`h-14 rounded-2xl border-2 font-bold flex items-center justify-center gap-2 transition-all ${m.active ? 'border-[#10c65c] bg-[#10c65c]/10 text-[#10c65c]' : 'border-gray-100 bg-white text-gray-400'}`}
-              >
-                {m.active && <span className="material-symbols-outlined text-[18px]">check_circle</span>}
-                {m.id}
-              </button>
-            ))}
+            {availableMaterials.map((m) => {
+              const isSelected = selectedMaterials.includes(m.name);
+              return (
+                <button
+                  key={m.id}
+                  onClick={() => toggleMaterial(m.name)}
+                  disabled={loading}
+                  className={`h-14 rounded-2xl border-2 font-bold flex items-center justify-center gap-2 transition-all ${isSelected ? 'border-[#10c65c] bg-[#10c65c]/10 text-[#10c65c]' : 'border-gray-100 bg-white text-gray-400'}`}
+                >
+                  {isSelected && <span className="material-symbols-outlined text-[18px]">check_circle</span>}
+                  {m.name}
+                </button>
+              );
+            })}
           </div>
         </section>
 
-        {activeMaterials.length > 0 && (
-          <section className="space-y-4 animate-page">
-            <h2 className="text-xl font-bold">Tabela de Preços (Opcional)</h2>
-            <div className="bg-white rounded-3xl border border-gray-50 overflow-hidden shadow-sm">
-              {activeMaterials.map((m, i) => (
-                <div key={m.id} className={`p-5 flex items-center justify-between ${i !== activeMaterials.length - 1 ? 'border-b border-gray-50' : ''}`}>
-                  <div>
-                    <p className="font-bold">{m.id}</p>
-                    <p className="text-[10px] font-bold text-gray-400">Preço por Kg</p>
-                  </div>
-                  <div className="w-32 h-12 bg-gray-50 rounded-xl border border-gray-100 flex items-center px-3 gap-2 focus-within:border-[#10c65c] focus-within:bg-white transition-colors">
-                    <span className="text-[10px] font-bold text-gray-400">R$</span>
-                    <input
-                      type="number"
-                      value={m.price}
-                      onChange={(e) => updatePrice(m.id, e.target.value)}
-                      className="bg-transparent w-full text-right font-bold outline-none"
-                      placeholder="0,00"
-                      disabled={loading}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        <section onClick={() => !loading && setForm(f => ({ ...f, isActive: !f.isActive }))} className="bg-white p-5 rounded-3xl border border-gray-50 flex items-center justify-between shadow-sm cursor-pointer active:bg-gray-50 transition-colors">
-          <div>
-            <h3 className="text-lg font-bold">Comprador Ativo</h3>
-            <p className="text-xs text-gray-400 font-medium">Habilitar para compra imediata</p>
-          </div>
+        <section onClick={() => !loading && setForm(f => ({ ...f, isActive: !f.isActive }))} className="bg-white p-5 rounded-3xl border border-gray-50 flex items-center justify-center gap-4 shadow-sm cursor-pointer active:bg-gray-50 transition-colors">
           <div className={`w-14 h-8 rounded-full relative p-1 transition-colors ${form.isActive ? 'bg-[#10c65c]' : 'bg-gray-200'}`}>
             <div className={`size-6 bg-white rounded-full absolute top-1 shadow-md transition-all ${form.isActive ? 'right-1' : 'left-1'}`}></div>
+          </div>
+          <div className="text-left">
+            <h3 className="text-base font-bold">Comprador Ativo</h3>
           </div>
         </section>
       </main>

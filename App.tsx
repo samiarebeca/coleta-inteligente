@@ -18,6 +18,8 @@ import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
 import SalesHistoryScreen from './screens/SalesHistoryScreen';
+import MaterialsListScreen from './screens/MaterialsListScreen';
+import EntriesHistoryScreen from './screens/EntriesHistoryScreen';
 
 export type Screen =
   | 'LOGIN'
@@ -38,6 +40,8 @@ export type Screen =
   | 'NOTIFICATIONS'
   | 'NOTIFICATIONS'
   | 'SALES_HISTORY'
+  | 'MATERIALS_LIST'
+  | 'ENTRIES_HISTORY'
   | 'SUCCESS_SPLASH';
 
 const App: React.FC = () => {
@@ -155,6 +159,8 @@ const App: React.FC = () => {
       case 'SETTINGS': return <SettingsScreen navigate={navigateTo} onBack={() => navigateTo(prevScreen)} />;
       case 'NOTIFICATIONS': return <NotificationsScreen navigate={navigateTo} onBack={() => navigateTo(prevScreen)} />;
       case 'SALES_HISTORY': return <SalesHistoryScreen navigate={navigateTo} />;
+      case 'MATERIALS_LIST': return <MaterialsListScreen navigate={navigateTo} />;
+      case 'ENTRIES_HISTORY': return <EntriesHistoryScreen navigate={navigateTo} />;
       default: return <LoginScreen onLogin={handleLogin} />;
     }
   };
