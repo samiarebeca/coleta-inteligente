@@ -1,6 +1,6 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Screen } from '../App';
+import SideMenu from '../components/SideMenu';
 
 interface AssociateDashboardProps {
   navigate: (screen: Screen) => void;
@@ -9,6 +9,9 @@ interface AssociateDashboardProps {
 }
 
 const AssociateDashboard: React.FC<AssociateDashboardProps> = ({ navigate, userName, userLogo }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Dados de produção (mock)
   const productionData = [
     { label: 'Papel', value: 40, color: '#f97316' },
     { label: 'Plástico', value: 35, color: '#10c65c' },
@@ -29,22 +32,41 @@ const AssociateDashboard: React.FC<AssociateDashboardProps> = ({ navigate, userN
     return `${item.color} ${start}% ${cumulativePercent}%`;
   }).join(', ');
 
+  const menuItems: { label: string; icon: string; screen: Screen }[] = [
+    { label: 'Início', icon: 'home', screen: 'ASSOCIATE_DASHBOARD' },
+    { label: 'Notificações', icon: 'notifications', screen: 'NOTIFICATIONS' },
+    { label: 'Meu Perfil', icon: 'person', screen: 'PROFILE' },
+  ];
+
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-[#f6f8f7]">
+      <SideMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        navigate={navigate}
+        menuItems={menuItems}
+        userName={userName}
+        userLogo={userLogo}
+        userRole="Associado"
+      />
+
       <header className="flex-none p-4 pt-6 flex items-center justify-between bg-[#f6f8f7]/95 backdrop-blur-sm z-20" style={{ touchAction: 'none' }}>
-        <div className="flex items-center gap-3" onClick={() => navigate('PROFILE')}>
-          <div className="relative size-12 rounded-full border-2 border-[#10c65c] bg-cover bg-center cursor-pointer"
+        <div className="flex items-center gap-3">
+          <div className="relative size-10 rounded-full border-2 border-[#10c65c] bg-cover bg-center cursor-pointer"
+            onClick={() => navigate('PROFILE')}
             style={{ backgroundImage: `url("${userLogo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzEwYzY1YyI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgM2MxLjY2IDAgMyAxLjM0IDMgM3MtMS4zNCAzLTMgMy0zLTEuMzQtMy0zIDEuMzQtMyAzLTN6bTAgMTQuMmMtMi41IDAtNC43MS0xLjI4LTYtMy4yMi4wMy0xLjk5IDQtMy4wOCA2LTMuMDggMS45OSAwIDUuOTcgMS4wOSA2IDMuMDgtMS4yOSAxLjk0LTMuNSAzLjIyLTYgMy4yMnoiLz48L3N2Zz4='}")` }}>
-            <div className="absolute bottom-0 right-0 size-3 bg-[#10c65c] rounded-full border-2 border-white"></div>
           </div>
-          <div className="flex flex-col cursor-pointer">
+          <div className="flex flex-col cursor-pointer" onClick={() => navigate('PROFILE')}>
             <h2 className="text-xl font-bold leading-tight">Olá, {userName?.split(' ')[0] || 'Associado'} 👋</h2>
             <p className="text-sm font-medium text-[#4c9a6c]">Associado Logado</p>
           </div>
         </div>
-        <button onClick={() => navigate('NOTIFICATIONS')} className="size-10 rounded-full bg-white shadow-sm flex items-center justify-center active:scale-95 transition-transform">
-          <span className="material-symbols-outlined text-gray-700">notifications</span>
-        </button>
+
+        <div className="flex items-center gap-2">
+          <button onClick={() => setIsMenuOpen(true)} className="p-1 rounded-full active:bg-gray-200 transition-colors">
+            <span className="material-symbols-outlined text-gray-800 text-3xl">menu</span>
+          </button>
+        </div>
       </header>
 
       <main className="flex-1 px-4 py-6 space-y-6 overflow-y-auto no-scrollbar overscroll-y-none">
@@ -74,7 +96,7 @@ const AssociateDashboard: React.FC<AssociateDashboardProps> = ({ navigate, userN
         </section>
 
         {/* Gráficos de Metas (Barra de Progresso) */}
-        <section className="space-y-4">
+        <section className="space-y-4 pb-10">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-bold tracking-tight">Metas da Associação</h3>
             <span className="text-xs font-bold text-gray-400 uppercase">Mensal</span>
@@ -99,23 +121,6 @@ const AssociateDashboard: React.FC<AssociateDashboardProps> = ({ navigate, userN
             })}
           </div>
         </section>
-        {/* Bottom Nav */}
-        <nav className="w-full border-t border-gray-100 bg-white p-4 pb-6 flex justify-around mt-6">
-          <button
-            onClick={(e) => { e.preventDefault(); navigate('ASSOCIATE_DASHBOARD'); }}
-            className="flex flex-col items-center gap-1 text-[#10c65c]"
-          >
-            <span className="material-symbols-outlined filled-icon">home</span>
-            <span className="text-[10px] font-bold">Início</span>
-          </button>
-          <button
-            onClick={(e) => { e.preventDefault(); navigate('PROFILE'); }}
-            className="flex flex-col items-center gap-1 text-gray-300"
-          >
-            <span className="material-symbols-outlined">person</span>
-            <span className="text-[10px] font-medium">Perfil</span>
-          </button>
-        </nav>
       </main>
     </div>
   );

@@ -1,6 +1,6 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Screen } from '../App';
+import SideMenu from '../components/SideMenu';
 
 interface DriverDashboardProps {
   navigate: (screen: Screen) => void;
@@ -9,27 +9,48 @@ interface DriverDashboardProps {
 }
 
 const DriverDashboard: React.FC<DriverDashboardProps> = ({ navigate, userName, userLogo }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const menuItems: { label: string; icon: string; screen: Screen }[] = [
+    { label: 'Minhas Rotas', icon: 'map', screen: 'ROUTES_MAP' },
+    { label: 'Histórico de Coletas', icon: 'history', screen: 'HISTORY' },
+    { label: 'Avisos da Central', icon: 'notifications', screen: 'NOTIFICATIONS' },
+    { label: 'Meu Perfil', icon: 'person', screen: 'PROFILE' },
+  ];
+
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden bg-[#f6f8f7]">
+      <SideMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        navigate={navigate}
+        menuItems={menuItems}
+        userName={userName}
+        userLogo={userLogo}
+        userRole="Motorista"
+      />
+
       {/* Header */}
       <header className="flex-none p-4 flex items-center justify-between bg-[#f6f8f7]/95 backdrop-blur-sm z-20 border-b border-gray-100" style={{ touchAction: 'none' }}>
-        <div className="flex items-center gap-3" onClick={() => navigate('PROFILE')}>
+        <div className="flex items-center gap-3">
           <div className="size-10 rounded-full border-2 border-[#10c65c] bg-cover bg-center"
+            onClick={() => navigate('PROFILE')}
             style={{ backgroundImage: `url("${userLogo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzEwYzY1YyI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgM2MxLjY2IDAgMyAxLjM0IDMgM3MtMS4zNCAzLTMgMy0zLTEuMzQtMy0zIDEuMzQtMyAzLTN6bTAgMTQuMmMtMi41IDAtNC43MS0xLjI4LTYtMy4yMi4wMy0xLjk5IDQtMy4wOCA2LTMuMDggMS45OSAwIDUuOTcgMS4wOSA2IDMuMDgtMS4yOSAxLjk0LTMuNSAzLjIyLTYgMy4yMnoiLz48L3N2Zz4='}")` }}>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col" onClick={() => navigate('PROFILE')}>
             <span className="text-[10px] font-bold text-[#4c9a6c] uppercase tracking-wider">Bem-vindo</span>
             <h2 className="text-lg font-bold leading-tight">{userName?.split(' ')[0] || 'Motorista'}</h2>
           </div>
         </div>
-        <button onClick={() => navigate('NOTIFICATIONS')} className="relative size-10 flex items-center justify-center active:scale-95 transition-transform">
-          <span className="material-symbols-outlined text-2xl">notifications</span>
-          <span className="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-[#f6f8f7]"></span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setIsMenuOpen(true)} className="p-1 rounded-full active:bg-gray-200 transition-colors">
+            <span className="material-symbols-outlined text-gray-800 text-3xl">menu</span>
+          </button>
+        </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 flex flex-col gap-6 overflow-y-auto no-scrollbar overscroll-y-none">
+      <main className="flex-1 p-4 flex flex-col gap-6 overflow-y-auto no-scrollbar overscroll-y-none pb-10">
         {/* Route Card */}
         <section onClick={() => navigate('ROUTES_MAP')}>
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
@@ -129,39 +150,6 @@ const DriverDashboard: React.FC<DriverDashboardProps> = ({ navigate, userName, u
             </div>
           </div>
         </section>
-        {/* Driver Nav */}
-        <nav className="w-full border-t border-gray-100 bg-white p-4 pb-6 flex justify-between mt-6">
-          <button
-            onClick={(e) => { e.preventDefault(); navigate('ROUTES_MAP'); }}
-            className="flex flex-col items-center gap-1 px-4 text-[#10c65c]"
-          >
-            <div className="bg-[#10c65c]/10 rounded-full h-8 w-12 flex items-center justify-center">
-              <span className="material-symbols-outlined filled-icon">map</span>
-            </div>
-            <span className="text-[10px] font-bold">Rotas</span>
-          </button>
-          <button
-            onClick={(e) => { e.preventDefault(); navigate('HISTORY'); }}
-            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-          >
-            <span className="material-symbols-outlined">history</span>
-            <span className="text-[10px] font-medium">Histórico</span>
-          </button>
-          <button
-            onClick={(e) => { e.preventDefault(); navigate('NOTIFICATIONS'); }}
-            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-          >
-            <span className="material-symbols-outlined">notifications</span>
-            <span className="text-[10px] font-medium">Avisos</span>
-          </button>
-          <button
-            onClick={(e) => { e.preventDefault(); navigate('PROFILE'); }}
-            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-          >
-            <span className="material-symbols-outlined">person</span>
-            <span className="text-[10px] font-medium">Perfil</span>
-          </button>
-        </nav>
       </main>
     </div>
   );

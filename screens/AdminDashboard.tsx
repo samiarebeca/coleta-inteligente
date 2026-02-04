@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Screen } from '../App';
+import SideMenu from '../components/SideMenu';
 
 interface AdminDashboardProps {
   navigate: (screen: Screen) => void;
@@ -9,24 +10,46 @@ interface AdminDashboardProps {
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, userLogo }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const menuItems: { label: string; icon: string; screen: Screen }[] = [
+    { label: 'Início', icon: 'home', screen: 'ADMIN_DASHBOARD' },
+    { label: 'Mapa de Rotas', icon: 'map', screen: 'ROUTES_MAP' },
+    { label: 'Relatórios', icon: 'bar_chart', screen: 'REPORTS' },
+    { label: 'Notificações', icon: 'notifications', screen: 'NOTIFICATIONS' },
+    { label: 'Meu Perfil', icon: 'person', screen: 'PROFILE' },
+    { label: 'Configurações', icon: 'settings', screen: 'SETTINGS' },
+  ];
+
   return (
     <div className="fixed inset-0 no-scrollbar flex flex-col overflow-hidden bg-[#f6f8f7]">
+      <SideMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        navigate={navigate}
+        menuItems={menuItems}
+        userName={userName}
+        userLogo={userLogo}
+        userRole="Administrador"
+      />
+
       {/* Header */}
       <header className="flex-none flex items-center justify-between p-5 pb-2 bg-[#f6f8f7]/95 backdrop-blur-sm z-20" style={{ touchAction: 'none' }}>
-        <div className="flex items-center gap-3" onClick={() => navigate('PROFILE')}>
-          <div className="relative size-12 rounded-full border-2 border-[#13ec6d] bg-cover bg-center cursor-pointer"
-            style={{ backgroundImage: `url("${userLogo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzEwYzY1YyI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgM2MxLjY2IDAgMyAxLjM0IDMgM3MtMS4zNCAzLTMgMy0zLTEuMzQtMy0zIDEuMzQtMyAzLTN6bTAgMTQuMmMtMi41IDAtNC43MS0xLjI4LTYtMy4yMi4wMy0xLjk5IDQtMy4wOCA2LTMuMDggMS45OSAwIDUuOTcgMS4wOSA2IDMuMDgtMS4yOSAxLjk0LTMuNSAzLjIyLTYgMy4yMnoiLz48L3N2Zz4='}")` }}>
-            <div className="absolute bottom-0 right-0 size-3 bg-[#13ec6d] rounded-full border-2 border-white"></div>
+        <div className="flex items-center gap-3">
+          <div className="relative size-10 rounded-full border-2 border-[#13ec6d] bg-cover bg-center cursor-pointer"
+            onClick={() => navigate('PROFILE')}
+            style={{ backgroundImage: `url("${userLogo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzEwYzY1YyI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi404IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnpNMCAzYzEuNjYgMCAzIDEuMzQgMyAzcy0xLjM0IDMtMyAzLTMtMS4zNC0zLTMgMS4zNC0zIDMtM3pNMCAxNC4yYy0yLjUgMC00LjcxLTEuMjgtNi0zLjIyLjAzLTEuOTkgNC0zLjA4IDYtMy4wOCAxLjk5IDAgNS45NyAxLjA5IDYgMy4wOC0xLjI5IDEuOTQtMy41IDMuMjItNiAzLjIyWiIvPjwvc3ZnPg=='}")` }}>
           </div>
-          <div className="flex flex-col cursor-pointer">
-            <span className="text-xs text-gray-400">Bem vindo de volta,</span>
+          <div className="flex flex-col" onClick={() => navigate('PROFILE')}>
+            <span className="text-xs text-gray-400">Bem vindo,</span>
             <h2 className="text-lg font-bold leading-tight">{userName?.split(' ')[0] || 'Admin'}</h2>
           </div>
         </div>
-        <button onClick={() => navigate('NOTIFICATIONS')} className="relative size-10 rounded-full bg-white shadow-sm flex items-center justify-center active:scale-95 transition-transform">
-          <span className="material-symbols-outlined text-gray-700">notifications</span>
-          <span className="absolute top-2.5 right-2.5 size-2 bg-red-500 rounded-full"></span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setIsMenuOpen(true)} className="p-1 rounded-full active:bg-gray-200 transition-colors">
+            <span className="material-symbols-outlined text-gray-800 text-3xl">menu</span>
+          </button>
+        </div>
       </header>
 
       <main className="flex-1 overflow-y-auto overscroll-y-none">
@@ -68,7 +91,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
         </section>
 
         {/* Quick Actions */}
-        <section className="px-5">
+        <section className="px-5 pb-10">
           <h3 className="text-gray-900 font-bold mb-4">Ações Rápidas</h3>
           <div className="grid grid-cols-2 gap-4">
             {[
@@ -76,13 +99,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
               { id: 'SALE_REG', label: 'Registrar Venda', icon: 'point_of_sale' },
               { id: 'BUYER_REG', label: 'Cadastrar Compradores', icon: 'person_add' },
               { id: 'MATERIAL_REG', label: 'Cadastrar Materiais', icon: 'recycling' },
-              { id: 'ROUTES_MAP', label: 'Rotas de Coleta', icon: 'local_shipping' },
+              { id: 'ROUTES_MAP', label: 'Rotas de Coleta', icon: 'local_shipping', disabled: true },
               { id: 'REPORTS', label: 'Relatórios', icon: 'bar_chart' },
             ].map((action) => (
               <button
                 key={action.id}
-                onClick={() => navigate(action.id as Screen)}
-                className="flex flex-col items-center gap-3 p-5 rounded-2xl bg-white shadow-sm border border-gray-100 group active:scale-95 transition-all hover:border-[#13ec6d]/30"
+                onClick={() => !action.disabled && navigate(action.id as Screen)}
+                disabled={action.disabled}
+                className={`flex flex-col items-center gap-3 p-5 rounded-2xl bg-white shadow-sm border border-gray-100 group transition-all ${action.disabled
+                    ? 'opacity-50 cursor-not-allowed grayscale'
+                    : 'active:scale-95 hover:border-[#13ec6d]/30'
+                  }`}
               >
                 <div className="size-14 rounded-full bg-[#13ec6d]/10 flex items-center justify-center group-hover:bg-[#13ec6d]/20 transition-colors">
                   <span className="material-symbols-outlined text-[#13ec6d] text-[32px]">{action.icon}</span>
@@ -92,39 +119,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
             ))}
           </div>
         </section>
-        {/* Bottom Nav */}
-        <nav className="w-full border-t border-gray-100 bg-white p-4 pb-6 flex justify-between mt-6">
-          <button
-            onClick={(e) => { e.preventDefault(); navigate('ADMIN_DASHBOARD'); }}
-            className="flex flex-col items-center gap-1 px-4"
-          >
-            <div className="bg-[#13ec6d]/20 rounded-full h-8 w-12 flex items-center justify-center text-[#0eb553]">
-              <span className="material-symbols-outlined filled-icon">home</span>
-            </div>
-            <span className="text-[10px] font-bold">Início</span>
-          </button>
-          <button
-            onClick={(e) => { e.preventDefault(); navigate('ROUTES_MAP'); }}
-            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-          >
-            <span className="material-symbols-outlined">map</span>
-            <span className="text-[10px] font-medium">Mapa</span>
-          </button>
-          <button
-            onClick={(e) => { e.preventDefault(); navigate('PROFILE'); }}
-            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-          >
-            <span className="material-symbols-outlined">person</span>
-            <span className="text-[10px] font-medium">Perfil</span>
-          </button>
-          <button
-            onClick={(e) => { e.preventDefault(); navigate('SETTINGS'); }}
-            className="flex flex-col items-center gap-1 px-4 text-gray-300 hover:text-[#10c65c] transition-colors"
-          >
-            <span className="material-symbols-outlined">settings</span>
-            <span className="text-[10px] font-medium">Config</span>
-          </button>
-        </nav>
       </main>
     </div>
   );
