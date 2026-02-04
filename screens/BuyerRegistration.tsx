@@ -174,14 +174,19 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
             <h3 className="text-base font-bold">Comprador Ativo</h3>
           </div>
         </section>
-      </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-white/90 backdrop-blur-md border-t border-gray-100 z-30">
-        <button onClick={handleSave} disabled={loading} className="h-16 w-full bg-[#10c65c] text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg shadow-[#10c65c]/30 active:scale-95 transition-all disabled:opacity-50">
-          <span className="material-symbols-outlined">save</span>
-          {loading ? 'SALVANDO...' : 'SALVAR COMPRADOR'}
-        </button>
-      </footer>
+        <div className="flex flex-col gap-3 pt-4 pb-10">
+          <button onClick={handleSave} disabled={loading} className="h-16 w-full bg-[#10c65c] text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg shadow-[#10c65c]/30 active:scale-95 transition-all disabled:opacity-50">
+            <span className="material-symbols-outlined">save</span>
+            {loading ? 'SALVANDO...' : 'SALVAR COMPRADOR'}
+          </button>
+
+          <button onClick={() => navigate('BUYERS_LIST')} className="h-14 w-full bg-white text-gray-700 border-2 border-gray-100 rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-gray-50">
+            <span className="material-symbols-outlined">list_alt</span>
+            VER COMPRADORES
+          </button>
+        </div>
+      </main>
     </div>
   );
 };
