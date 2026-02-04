@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Screen } from '../App';
 import { supabase } from '../lib/supabaseClient';
@@ -9,7 +8,8 @@ interface SaleRegistrationProps {
 }
 
 const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess }) => {
-  const [selectedMaterial, setSelectedMaterial] = useState('PET');
+  const [materials, setMaterials] = useState<any[]>([]);
+  const [selectedMaterial, setSelectedMaterial] = useState('');
   const [selectedSubclass, setSelectedSubclass] = useState('');
   const [weight, setWeight] = useState(100);
   const [unitPrice, setUnitPrice] = useState(3.50);
@@ -22,6 +22,8 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
     'PET': ['Cristal', 'Verde', 'Colorido'],
     'Papelão': ['Ondulado', 'Kraft', 'Misto'],
     'Alumínio': ['Lata', 'Perfil'],
+    'Plástico': ['PVC', 'PEAD', 'PP', 'PS'],
+    'Vidro': ['Incolor', 'Ambar', 'Verde']
   };
 
   useEffect(() => {
@@ -39,7 +41,19 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
         console.error('Error fetching buyers:', error);
       }
     };
+
+    const fetchMaterials = async () => {
+      const { data } = await supabase.from('materials').select('*').order('name');
+      if (data) {
+        setMaterials(data);
+        if (data.length > 0) {
+          setSelectedMaterial(data[0].name);
+        }
+      }
+    };
+
     fetchBuyers();
+    fetchMaterials();
   }, []);
 
   const handleFinalize = async () => {
@@ -110,9 +124,10 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
         <section>
           <h3 className="text-xl font-bold mb-4">Material</h3>
           <div className="grid grid-cols-3 gap-3">
-            {['PET', 'Papelão', 'Alumínio'].map(m => (
-              <button key={m} onClick={() => { setSelectedMaterial(m); setSelectedSubclass(''); }} className={`h-20 rounded-2xl border-2 font-bold transition-all ${selectedMaterial === m ? 'border-[#10c65c] bg-[#10c65c]/5 text-[#10c65c]' : 'border-gray-100 bg-white text-gray-400'}`}>
-                {m}
+            {materials.map(m => (
+              <button key={m.id} onClick={() => { setSelectedMaterial(m.name); setSelectedSubclass(''); }} className={`h-20 rounded-2xl border-2 font-bold flex flex-col items-center justify-center transition-all ${selectedMaterial === m.name ? 'border-[#10c65c] bg-[#10c65c]/5 text-[#10c65c]' : 'border-gray-100 bg-white text-gray-400'}`}>
+                <span className="text-sm">{m.name}</span>
+                {m.subclass && <span className="text-[9px] font-normal opacity-70">{m.subclass}</span>}
               </button>
             ))}
           </div>
@@ -120,7 +135,7 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
 
         {subclasses[selectedMaterial] && (
           <div className="animate-page">
-            <h3 className="text-xs font-bold text-gray-400 uppercase mb-2">Subclassificação</h3>
+            <h3 className="text-xs font-bold text-gray-400 uppercase mb-2">Subclassificação ({selectedMaterial})</h3>
             <div className="flex flex-wrap gap-2">
               {subclasses[selectedMaterial].map(sub => (
                 <button key={sub} onClick={() => setSelectedSubclass(sub)} className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all ${selectedSubclass === sub ? 'border-[#10c65c] bg-[#10c65c] text-white' : 'border-gray-200 bg-white text-gray-500'}`}>{sub}</button>
@@ -166,5 +181,4 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
     </div>
   );
 };
-
 export default SaleRegistration;

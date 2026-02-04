@@ -12,11 +12,20 @@ const EntryRegistration: React.FC<EntryRegistrationProps> = ({ navigate, onSucce
   const [type, setType] = useState<'ASSOCIADO' | 'AVULSO'>('ASSOCIADO');
   const [materials, setMaterials] = useState<any[]>([]);
   const [selectedMaterial, setSelectedMaterial] = useState<any | null>(null);
+  const [selectedSubclass, setSelectedSubclass] = useState('');
   const [weight, setWeight] = useState('0');
   const [loading, setLoading] = useState(false);
 
   // States for Avulso or Associate lookup
   const [searchQuery, setSearchQuery] = useState('');
+
+  const subclassesMap: Record<string, string[]> = {
+    'PET': ['Cristal', 'Verde', 'Colorido'],
+    'Papelão': ['Ondulado', 'Kraft', 'Misto'],
+    'Alumínio': ['Lata', 'Perfil'],
+    'Plástico': ['PVC', 'PEAD', 'PP', 'PS'],
+    'Vidro': ['Incolor', 'Ambar', 'Verde']
+  };
 
   useEffect(() => {
     fetchMaterials();
@@ -63,9 +72,8 @@ const EntryRegistration: React.FC<EntryRegistrationProps> = ({ navigate, onSucce
       source_type: type === 'ASSOCIADO' ? 'associate' : 'avulso',
       material_id: selectedMaterial.id,
       material_name: selectedMaterial.name,
+      subclass: selectedSubclass || selectedMaterial.subclass,
       weight: parseFloat(weight),
-      // If we had the logged-in user ID for 'associate', we would add it here
-      // associate_id: ...
       avulso_name: type === 'AVULSO' ? (searchQuery || 'Anônimo') : null
     };
 
@@ -79,6 +87,7 @@ const EntryRegistration: React.FC<EntryRegistrationProps> = ({ navigate, onSucce
       alert("Entrada registrada com sucesso!");
       setWeight('0');
       setSelectedMaterial(null);
+      setSelectedSubclass('');
       // Optional: onSuccess(); if we want to navigate back immediately
     }
   };
@@ -125,7 +134,7 @@ const EntryRegistration: React.FC<EntryRegistrationProps> = ({ navigate, onSucce
           <h3 className="text-xl font-bold mb-4">Selecione o Material</h3>
           <div className="grid grid-cols-3 gap-3">
             {materials.map((m) => (
-              <button key={m.id} onClick={() => setSelectedMaterial(m)} className={`relative flex flex-col items-center justify-center h-24 rounded-2xl border-2 transition-all ${selectedMaterial?.id === m.id ? 'border-[#10c65c] bg-[#10c65c]/5' : 'border-transparent bg-white shadow-sm'}`}>
+              <button key={m.id} onClick={() => { setSelectedMaterial(m); setSelectedSubclass(''); }} className={`relative flex flex-col items-center justify-center h-24 rounded-2xl border-2 transition-all ${selectedMaterial?.id === m.id ? 'border-[#10c65c] bg-[#10c65c]/5' : 'border-transparent bg-white shadow-sm'}`}>
                 <div className="size-8 rounded-full bg-gray-100 flex items-center justify-center mb-1 text-[#10c65c]">
                   <span className="material-symbols-outlined">recycling</span>
                 </div>
@@ -134,6 +143,17 @@ const EntryRegistration: React.FC<EntryRegistrationProps> = ({ navigate, onSucce
               </button>
             ))}
           </div>
+
+          {selectedMaterial && subclassesMap[selectedMaterial.name] && (
+            <div className="mt-4 animate-page">
+              <label className="text-xs font-bold text-gray-500 ml-1 mb-2 block">Selecione a Subclasse</label>
+              <div className="flex flex-wrap gap-2">
+                {subclassesMap[selectedMaterial.name].map(sub => (
+                  <button key={sub} onClick={() => setSelectedSubclass(sub)} className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all ${selectedSubclass === sub ? 'border-[#10c65c] bg-[#10c65c] text-white' : 'border-gray-200 bg-white text-gray-500'}`}>{sub}</button>
+                ))}
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="flex flex-col gap-4">
