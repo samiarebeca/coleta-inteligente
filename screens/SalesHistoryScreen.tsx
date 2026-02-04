@@ -195,7 +195,12 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
                                         <h3 className="font-bold text-gray-800">{sale.buyers?.name || 'Comprador Desconhecido'}</h3>
                                         <p className="text-xs text-gray-400 font-medium">{new Date(sale.created_at).toLocaleDateString('pt-BR')} às {new Date(sale.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</p>
                                     </div>
-                                    <span className="bg-[#10c65c]/10 text-[#10c65c] px-3 py-1 rounded-full text-xs font-bold">{sale.material}</span>
+                                    <div className="flex flex-col items-end gap-1">
+                                        <span className="bg-[#10c65c]/10 text-[#10c65c] px-3 py-1 rounded-full text-xs font-bold">{sale.material}</span>
+                                        {sale.subclass && (
+                                            <span className="text-[10px] font-bold text-gray-400 bg-gray-50 px-2 py-0.5 rounded-md self-end">{sale.subclass}</span>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
                                     <div className="flex gap-4">
