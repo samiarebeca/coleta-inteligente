@@ -156,12 +156,12 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
                             <span className="text-2xl font-black text-[#10c65c]">R$ {(editWeight * editPrice).toFixed(2)}</span>
                         </div>
                     </section>
-                </main>
 
-                <footer className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 z-30 flex gap-4">
-                    <button onClick={() => setEditingSale(null)} className="flex-1 h-14 bg-gray-100 text-gray-600 rounded-2xl font-bold">Cancelar</button>
-                    <button onClick={handleSaveEdit} className="flex-1 h-14 bg-[#10c65c] text-white rounded-2xl font-bold font-bold shadow-lg shadow-[#10c65c]/20">Salvar</button>
-                </footer>
+                    <div className="flex gap-4 pb-4">
+                        <button onClick={() => setEditingSale(null)} className="flex-1 h-14 bg-gray-100 text-gray-600 rounded-2xl font-bold active:scale-95 transition-all">Cancelar</button>
+                        <button onClick={handleSaveEdit} className="flex-1 h-14 bg-[#10c65c] text-white rounded-2xl font-bold shadow-lg shadow-[#10c65c]/20 active:scale-95 transition-all">Salvar Edição</button>
+                    </div>
+                </main>
             </div>
         );
     }
