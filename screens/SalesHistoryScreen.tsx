@@ -56,26 +56,29 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
         setEditSubclass(sale.subclass || '');
         setEditWeight(sale.weight);
         setEditPrice(sale.price_per_kg);
-        setEditBuyerId(sale.buyer_id);
+        setEditBuyerId(sale.buyer_id || '');
     };
 
     const handleSaveEdit = async () => {
         if (!editingSale) return;
 
+        const updatePayload: any = {
+            material: editMaterial,
+            subclass: editSubclass,
+            weight: editWeight,
+            price_per_kg: editPrice,
+            total_value: editWeight * editPrice,
+            buyer_id: editBuyerId === '' ? null : editBuyerId // Ensure valid UUID or null
+        };
+
         const { error } = await supabase
             .from('sales')
-            .update({
-                material: editMaterial,
-                subclass: editSubclass,
-                weight: editWeight,
-                price_per_kg: editPrice,
-                total_value: editWeight * editPrice,
-                buyer_id: editBuyerId
-            })
+            .update(updatePayload)
             .eq('id', editingSale.id);
 
         if (error) {
             alert('Erro ao atualizar venda: ' + error.message);
+            console.error(error);
         } else {
             alert('Venda atualizada com sucesso!');
             setEditingSale(null);
@@ -91,6 +94,13 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
             alert('Erro ao excluir: ' + error.message);
         } else {
             fetchSales();
+        }
+    };
+
+    const handleDeleteClick = async () => {
+        if (editingSale) {
+            await handleDelete(editingSale.id);
+            setEditingSale(null);
         }
     };
 
@@ -158,8 +168,13 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
                     </section>
 
                     <div className="flex gap-4 pb-4">
-                        <button onClick={() => setEditingSale(null)} className="flex-1 h-14 bg-gray-100 text-gray-600 rounded-2xl font-bold active:scale-95 transition-all">Cancelar</button>
-                        <button onClick={handleSaveEdit} className="flex-1 h-14 bg-[#10c65c] text-white rounded-2xl font-bold shadow-lg shadow-[#10c65c]/20 active:scale-95 transition-all">Salvar Edição</button>
+                        <button onClick={handleDeleteClick} className="flex-1 h-14 bg-red-50 text-red-500 rounded-2xl font-bold active:scale-95 transition-all flex items-center justify-center gap-2 border border-red-100">
+                            <span className="material-symbols-outlined">delete</span>
+                            EXCLUIR
+                        </button>
+                        <button onClick={handleSaveEdit} className="flex-1 h-14 bg-[#10c65c] text-white rounded-2xl font-bold shadow-lg shadow-[#10c65c]/20 active:scale-95 transition-all">
+                            SALVAR EDIÇÃO
+                        </button>
                     </div>
                 </main>
             </div>
