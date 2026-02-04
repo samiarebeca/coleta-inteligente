@@ -70,6 +70,8 @@ const MaterialsListScreen: React.FC<MaterialsListScreenProps> = ({ navigate }) =
         if (error) {
             alert("Erro ao excluir: " + error.message);
         } else {
+            alert("Material excluído!");
+            setEditingMaterial(null);
             fetchMaterials();
         }
     }
@@ -101,9 +103,12 @@ const MaterialsListScreen: React.FC<MaterialsListScreenProps> = ({ navigate }) =
                     </div>
 
                     <div className="flex gap-4">
-                        <button onClick={handleSaveEdit} className="flex-1 h-14 bg-[#10c65c] text-white rounded-2xl font-bold shadow-lg shadow-[#10c65c]/20 active:scale-95 transition-all">Salvar Alterações</button>
+                        <button onClick={() => handleDelete(editingMaterial.id)} className="flex-1 h-14 bg-red-50 text-red-500 rounded-2xl font-bold active:scale-95 transition-all flex items-center justify-center gap-2 border border-red-100">
+                            <span className="material-symbols-outlined">delete</span>
+                            EXCLUIR
+                        </button>
+                        <button onClick={handleSaveEdit} className="flex-1 h-14 bg-[#10c65c] text-white rounded-2xl font-bold shadow-lg shadow-[#10c65c]/20 active:scale-95 transition-all">SALVAR</button>
                     </div>
-                    <button onClick={() => handleDelete(editingMaterial.id)} className="text-red-500 font-bold text-sm py-4">Excluir Material</button>
                 </main>
             </div>
         );
