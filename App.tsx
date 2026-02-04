@@ -17,6 +17,7 @@ import RoutesScreen from './screens/RoutesScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import SettingsScreen from './screens/SettingsScreen';
 import NotificationsScreen from './screens/NotificationsScreen';
+import SalesHistoryScreen from './screens/SalesHistoryScreen';
 
 export type Screen =
   | 'LOGIN'
@@ -35,6 +36,8 @@ export type Screen =
   | 'PROFILE'
   | 'SETTINGS'
   | 'NOTIFICATIONS'
+  | 'NOTIFICATIONS'
+  | 'SALES_HISTORY'
   | 'SUCCESS_SPLASH';
 
 const App: React.FC = () => {
@@ -151,6 +154,7 @@ const App: React.FC = () => {
       case 'PROFILE': return <ProfileScreen navigate={navigateTo} onLogout={handleLogout} userRole={userRole || 'associate'} userName={userName} />;
       case 'SETTINGS': return <SettingsScreen navigate={navigateTo} onBack={() => navigateTo(prevScreen)} />;
       case 'NOTIFICATIONS': return <NotificationsScreen navigate={navigateTo} onBack={() => navigateTo(prevScreen)} />;
+      case 'SALES_HISTORY': return <SalesHistoryScreen navigate={navigateTo} />;
       default: return <LoginScreen onLogin={handleLogin} />;
     }
   };

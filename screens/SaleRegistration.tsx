@@ -156,6 +156,11 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
             <span className="material-symbols-outlined">payments</span>
             {loading ? 'FINALIZANDO...' : 'FINALIZAR VENDA'}
           </button>
+
+          <button onClick={() => navigate('SALES_HISTORY')} className="h-14 w-full bg-white text-gray-800 border-2 border-gray-100 rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-gray-50">
+            <span className="material-symbols-outlined">list_alt</span>
+            VER REGISTROS
+          </button>
         </div>
       </main>
     </div>
