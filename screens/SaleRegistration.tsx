@@ -10,7 +10,7 @@ interface SaleRegistrationProps {
 const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess }) => {
   const [materials, setMaterials] = useState<any[]>([]);
   const [selectedMaterial, setSelectedMaterial] = useState<any | null>(null); // Store full object
-  const [selectedSubclasses, setSelectedSubclasses] = useState<string[]>([]); // Array
+  const [selectedSubclass, setSelectedSubclass] = useState<string | null>(null); // Single string
   const [weight, setWeight] = useState(100);
   const [unitPrice, setUnitPrice] = useState(3.50);
 
@@ -50,10 +50,10 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
   }, []);
 
   const toggleSubclass = (sub: string) => {
-    if (selectedSubclasses.includes(sub)) {
-      setSelectedSubclasses(selectedSubclasses.filter(s => s !== sub));
+    if (selectedSubclass === sub) {
+      setSelectedSubclass(null);
     } else {
-      setSelectedSubclasses([...selectedSubclasses, sub]);
+      setSelectedSubclass(sub);
     }
   };
 
@@ -74,7 +74,7 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
         .insert({
           buyer_id: selectedBuyerId,
           material: selectedMaterial?.name || '',
-          subclass: selectedSubclasses.length > 0 ? selectedSubclasses.join(', ') : null,
+          subclass: selectedSubclass,
           weight: weight,
           price_per_kg: unitPrice,
           total_value: weight * unitPrice
@@ -126,7 +126,7 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
           <h3 className="text-xl font-bold mb-4">Material</h3>
           <div className="grid grid-cols-3 gap-3">
             {materials.map(m => (
-              <button key={m.id} onClick={() => { setSelectedMaterial(m); setSelectedSubclasses([]); }} className={`h-20 rounded-2xl border-2 font-bold flex flex-col items-center justify-center transition-all ${selectedMaterial?.name === m.name ? 'border-[#10c65c] bg-[#10c65c]/5 text-[#10c65c]' : 'border-gray-100 bg-white text-gray-400'}`}>
+              <button key={m.id} onClick={() => { setSelectedMaterial(m); setSelectedSubclass(null); }} className={`h-20 rounded-2xl border-2 font-bold flex flex-col items-center justify-center transition-all ${selectedMaterial?.name === m.name ? 'border-[#10c65c] bg-[#10c65c]/5 text-[#10c65c]' : 'border-gray-100 bg-white text-gray-400'}`}>
                 <span className="text-sm">{m.name}</span>
                 {/* Optional info */}
               </button>
@@ -139,7 +139,7 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
             <h3 className="text-xs font-bold text-gray-400 uppercase mb-2">Subclassificação ({selectedMaterial.name})</h3>
             <div className="flex flex-wrap gap-2">
               {selectedMaterial.subclasses.map((sub: string) => {
-                const isSelected = selectedSubclasses.includes(sub);
+                const isSelected = selectedSubclass === sub;
                 return (
                   <button key={sub} onClick={() => toggleSubclass(sub)} className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all ${isSelected ? 'border-[#10c65c] bg-[#10c65c] text-white' : 'border-gray-200 bg-white text-gray-500'}`}>
                     {sub}
