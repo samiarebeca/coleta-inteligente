@@ -49,9 +49,9 @@ const RoutesScreen: React.FC<RoutesScreenProps> = ({ navigate, userRole = 'admin
         )}
       </header>
 
-      <main className="flex-1 overflow-y-auto no-scrollbar pb-24 overscroll-y-none">
+      <main className="flex-1 overflow-y-auto no-scrollbar pb-24 overscroll-y-none md:flex md:flex-row md:overflow-hidden md:pb-0">
         {/* Map Preview */}
-        <div className="h-64 w-full bg-gray-200 relative">
+        <div className="h-64 w-full bg-gray-200 relative md:h-full md:flex-1">
           <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=600&h=300" alt="Map" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/10"></div>
           {/* Mock Markers based on driverPoints status */}
@@ -59,7 +59,7 @@ const RoutesScreen: React.FC<RoutesScreenProps> = ({ navigate, userRole = 'admin
           <div className={`absolute bottom-1/3 right-1/4 size-6 rounded-full border-2 border-white shadow-lg ${driverPoints[1]?.status === 'collected' ? 'bg-gray-400' : 'bg-[#10c65c]'}`}></div>
         </div>
 
-        <section className="p-4 space-y-4">
+        <section className="p-4 space-y-4 md:flex-1 md:overflow-y-auto md:h-full md:pb-24">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">{userRole === 'driver' ? 'Pontos da Rota' : 'Suas Rotas Ativas'}</h2>
             <span className="text-xs font-bold text-[#10c65c] bg-[#10c65c]/10 px-3 py-1 rounded-full">
@@ -67,7 +67,7 @@ const RoutesScreen: React.FC<RoutesScreenProps> = ({ navigate, userRole = 'admin
             </span>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-4 md:grid md:grid-cols-1 lg:grid-cols-2 md:gap-4 md:space-y-0">
             {userRole === 'driver' ? (
               // Driver View: Interactive List
               driverPoints.map((point, index) => (
@@ -88,8 +88,8 @@ const RoutesScreen: React.FC<RoutesScreenProps> = ({ navigate, userRole = 'admin
                     <button
                       onClick={() => togglePointStatus(point.id, 'collected')}
                       className={`flex-1 h-12 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all active:scale-95 ${point.status === 'collected'
-                          ? 'bg-[#10c65c] text-white shadow-lg shadow-[#10c65c]/20'
-                          : 'bg-white border-2 border-gray-100 text-gray-400 hover:border-[#10c65c] hover:text-[#10c65c]'
+                        ? 'bg-[#10c65c] text-white shadow-lg shadow-[#10c65c]/20'
+                        : 'bg-white border-2 border-gray-100 text-gray-400 hover:border-[#10c65c] hover:text-[#10c65c]'
                         }`}
                     >
                       <span className="material-symbols-outlined text-[18px]">check_circle</span>
@@ -98,8 +98,8 @@ const RoutesScreen: React.FC<RoutesScreenProps> = ({ navigate, userRole = 'admin
                     <button
                       onClick={() => togglePointStatus(point.id, 'pending')}
                       className={`flex-1 h-12 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all active:scale-95 ${point.status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-700 border-2 border-yellow-200'
-                          : 'bg-white border-2 border-gray-100 text-gray-400 hover:bg-gray-50'
+                        ? 'bg-yellow-100 text-yellow-700 border-2 border-yellow-200'
+                        : 'bg-white border-2 border-gray-100 text-gray-400 hover:bg-gray-50'
                         }`}
                     >
                       <span className="material-symbols-outlined text-[18px]">schedule</span>
@@ -123,7 +123,7 @@ const RoutesScreen: React.FC<RoutesScreenProps> = ({ navigate, userRole = 'admin
                 { id: 'B', name: 'Rota Sul - Industrial', points: 8, status: 'Pendente', color: 'border-l-blue-500' },
                 { id: 'C', name: 'Rota Norte - Residencial', points: 15, status: 'Pendente', color: 'border-l-orange-500' },
               ].map((route) => (
-                <div key={route.id} className={`bg-white p-4 rounded-2xl border border-gray-50 border-l-4 ${route.color} shadow-sm flex items-center justify-between`}>
+                <div key={route.id} className={`bg-white p-4 rounded-2xl border border-gray-50 border-l-4 ${route.color} shadow-sm flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer`}>
                   <div className="flex-1">
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Caminhão 0{route.id}</p>
                     <h3 className="text-lg font-bold">{route.name}</h3>
@@ -148,8 +148,8 @@ const RoutesScreen: React.FC<RoutesScreenProps> = ({ navigate, userRole = 'admin
       </main>
 
       {userRole === 'admin' && (
-        <footer className="fixed bottom-0 left-0 right-0 mx-auto p-4 bg-white border-t border-gray-100 z-30">
-          <button className="h-14 w-full bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-2">
+        <footer className="absolute bottom-0 right-0 p-4 bg-white/95 border-t border-gray-100 z-30 w-full md:w-1/2 backdrop-blur-sm">
+          <button className="h-14 w-full bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition-colors">
             <span className="material-symbols-outlined">navigation</span>
             OTIMIZAR ROTAS
           </button>

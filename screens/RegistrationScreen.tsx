@@ -111,119 +111,121 @@ const RegistrationScreen: React.FC<RegistrationScreenProps> = ({ navigate, onSuc
 
     return (
         <div className="flex flex-col h-full min-h-screen items-center justify-center p-8 bg-[#f6f8f7] overscroll-y-none">
-            <div className="mb-6 flex flex-col items-center w-full">
-                <h1 className="text-[24px] font-black tracking-tighter text-center text-[#0f1a14] mb-1 uppercase">
-                    Nova Conta
-                </h1>
-                <p className="text-xs font-bold text-[#10c65c]/60 text-center uppercase tracking-widest">
-                    Preencha seus dados
-                </p>
-            </div>
-
-            <form className="w-full flex flex-col gap-4" onSubmit={handleRegister}>
-
-                {/* Association Selector */}
-                <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Associação</label>
-                    <AssociationSelect
-                        value={selectedAssoc}
-                        onChange={setSelectedAssoc}
-                        associations={associations}
-                        loading={associations.length === 0}
-                    />
+            <div className="w-full max-w-md flex flex-col items-center">
+                <div className="mb-6 flex flex-col items-center w-full">
+                    <h1 className="text-[24px] font-black tracking-tighter text-center text-[#0f1a14] mb-1 uppercase">
+                        Nova Conta
+                    </h1>
+                    <p className="text-xs font-bold text-[#10c65c]/60 text-center uppercase tracking-widest">
+                        Preencha seus dados
+                    </p>
                 </div>
 
-                {/* Role Selector */}
-                <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Selecione seu Perfil</label>
-                    <div className="grid grid-cols-3 gap-2">
-                        {roles.map((role) => (
-                            <button
-                                key={role.id}
-                                type="button"
-                                disabled={role.disabled}
-                                onClick={() => !role.disabled && setSelectedRole(role.id)}
-                                className={`flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all duration-300 ${role.disabled
-                                    ? 'border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
-                                    : selectedRole === role.id
-                                        ? 'border-[#10c65c] bg-[#10c65c]/5 text-[#10c65c]'
-                                        : 'border-white bg-white text-gray-400 shadow-sm'
-                                    }`}
-                            >
-                                <span className={`material-symbols-outlined text-[20px] mb-1 ${selectedRole === role.id ? 'filled-icon' : ''}`}>
-                                    {role.icon}
-                                </span>
-                                <span className="text-[7px] font-black uppercase tracking-tighter text-center">
-                                    {role.label.split(' ')[0]}
-                                </span>
-                            </button>
-                        ))}
+                <form className="w-full flex flex-col gap-4" onSubmit={handleRegister}>
+
+                    {/* Association Selector */}
+                    <div className="flex flex-col gap-2">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Associação</label>
+                        <AssociationSelect
+                            value={selectedAssoc}
+                            onChange={setSelectedAssoc}
+                            associations={associations}
+                            loading={associations.length === 0}
+                        />
                     </div>
-                </div>
 
-                {/* Name */}
-                <div className="relative group">
-                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10c65c] transition-colors text-[20px]">
-                        badge
-                    </span>
-                    <input
-                        type="text"
-                        className="block w-full pl-12 pr-4 py-3 h-12 bg-white border-none rounded-xl text-sm font-bold shadow-sm focus:ring-2 focus:ring-[#10c65c] transition-all"
-                        placeholder="Nome Completo"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                    />
-                </div>
+                    {/* Role Selector */}
+                    <div className="flex flex-col gap-2">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Selecione seu Perfil</label>
+                        <div className="grid grid-cols-3 gap-2">
+                            {roles.map((role) => (
+                                <button
+                                    key={role.id}
+                                    type="button"
+                                    disabled={role.disabled}
+                                    onClick={() => !role.disabled && setSelectedRole(role.id)}
+                                    className={`flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all duration-300 ${role.disabled
+                                        ? 'border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed opacity-50'
+                                        : selectedRole === role.id
+                                            ? 'border-[#10c65c] bg-[#10c65c]/5 text-[#10c65c]'
+                                            : 'border-white bg-white text-gray-400 shadow-sm'
+                                        }`}
+                                >
+                                    <span className={`material-symbols-outlined text-[20px] mb-1 ${selectedRole === role.id ? 'filled-icon' : ''}`}>
+                                        {role.icon}
+                                    </span>
+                                    <span className="text-[7px] font-black uppercase tracking-tighter text-center">
+                                        {role.label.split(' ')[0]}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
 
-                {/* Email */}
-                <div className="relative group">
-                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10c65c] transition-colors text-[20px]">
-                        mail
-                    </span>
-                    <input
-                        type="email"
-                        className="block w-full pl-12 pr-4 py-3 h-12 bg-white border-none rounded-xl text-sm font-bold shadow-sm focus:ring-2 focus:ring-[#10c65c] transition-all"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
+                    {/* Name */}
+                    <div className="relative group">
+                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10c65c] transition-colors text-[20px]">
+                            badge
+                        </span>
+                        <input
+                            type="text"
+                            className="block w-full pl-12 pr-4 py-3 h-12 bg-white border-none rounded-xl text-sm font-bold shadow-sm focus:ring-2 focus:ring-[#10c65c] transition-all"
+                            placeholder="Nome Completo"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                {/* Password */}
-                <div className="relative group">
-                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10c65c] transition-colors text-[20px]">
-                        lock
-                    </span>
-                    <input
-                        type="password"
-                        className="block w-full pl-12 pr-4 py-3 h-12 bg-white border-none rounded-xl text-sm font-bold shadow-sm focus:ring-2 focus:ring-[#10c65c] transition-all"
-                        placeholder="Senha"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
+                    {/* Email */}
+                    <div className="relative group">
+                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10c65c] transition-colors text-[20px]">
+                            mail
+                        </span>
+                        <input
+                            type="email"
+                            className="block w-full pl-12 pr-4 py-3 h-12 bg-white border-none rounded-xl text-sm font-bold shadow-sm focus:ring-2 focus:ring-[#10c65c] transition-all"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                {error && <p className="text-red-500 text-xs font-bold text-center">{error}</p>}
+                    {/* Password */}
+                    <div className="relative group">
+                        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#10c65c] transition-colors text-[20px]">
+                            lock
+                        </span>
+                        <input
+                            type="password"
+                            className="block w-full pl-12 pr-4 py-3 h-12 bg-white border-none rounded-xl text-sm font-bold shadow-sm focus:ring-2 focus:ring-[#10c65c] transition-all"
+                            placeholder="Senha"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full h-14 bg-[#10c65c] hover:bg-[#0da54b] text-white text-base font-black rounded-xl shadow-lg shadow-[#10c65c]/20 flex items-center justify-center gap-3 uppercase tracking-wider transition-all active:scale-95 mt-2"
-                >
-                    {loading ? 'Criando...' : 'Criar Conta'}
-                </button>
+                    {error && <p className="text-red-500 text-xs font-bold text-center">{error}</p>}
 
-                <button
-                    type="button"
-                    onClick={() => navigate('LOGIN')}
-                    className="text-xs font-bold text-gray-400 hover:text-[#10c65c] mt-4 uppercase tracking-wide"
-                >
-                    Voltar para Login
-                </button>
-            </form>
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full h-14 bg-[#10c65c] hover:bg-[#0da54b] text-white text-base font-black rounded-xl shadow-lg shadow-[#10c65c]/20 flex items-center justify-center gap-3 uppercase tracking-wider transition-all active:scale-95 mt-2"
+                    >
+                        {loading ? 'Criando...' : 'Criar Conta'}
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => navigate('LOGIN')}
+                        className="text-xs font-bold text-gray-400 hover:text-[#10c65c] mt-4 uppercase tracking-wide"
+                    >
+                        Voltar para Login
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

@@ -190,91 +190,99 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ navigate }) => {
   const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
   return (
-    <div className="flex flex-col h-full bg-[#f6f8f7]">
+    <div className="flex flex-col h-full bg-[#f6f8f7] relative">
       <header className="sticky top-0 bg-white p-4 border-b border-gray-100 flex items-center z-20" style={{ touchAction: 'none' }}>
-        <button onClick={() => navigate('ADMIN_DASHBOARD')} className="size-10 rounded-full hover:bg-black/5 flex items-center justify-center">
+        <button onClick={() => navigate('ADMIN_DASHBOARD')} className="size-10 rounded-full hover:bg-black/5 flex items-center justify-center transition-colors">
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
-        <h1 className="flex-1 text-center pr-10 text-lg font-bold">Relatórios - {monthNames[selectedMonth - 1]}/{selectedYear}</h1>
+        <h1 className="flex-1 text-center pr-10 text-lg md:text-xl font-bold">Relatórios - {monthNames[selectedMonth - 1]}/{selectedYear}</h1>
       </header>
 
-      <main ref={reportRef} className="p-4 space-y-6 overflow-y-auto no-scrollbar pb-24 overscroll-y-none">
+      <main ref={reportRef} className="flex-1 overflow-y-auto no-scrollbar p-4 md:p-8 pb-24 overscroll-y-none">
 
         {loading && (
           <div className="flex justify-center py-4"><div className="animate-spin size-6 border-2 border-[#10c65c] border-t-transparent rounded-full"></div></div>
         )}
 
-        {/* Card de Receita */}
-        <section className="bg-white p-5 rounded-3xl shadow-sm border border-gray-50 flex flex-col gap-2">
-          <p className="text-xs font-bold text-gray-400 uppercase">Receita Total do Mês</p>
-          <p className="text-4xl font-black text-gray-800">R$ {revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-          <div className="flex items-center gap-1 text-[#10c65c] text-xs font-bold">
-            <span className="material-symbols-outlined text-[16px]">calendar_month</span> {monthNames[selectedMonth - 1]}
-          </div>
-        </section>
+        <div className="max-w-6xl mx-auto space-y-6 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0 lg:items-start">
 
-        {/* Gráfico de Pizza - Produção Geral */}
-        <section className="bg-white p-6 rounded-3xl border border-gray-50 shadow-sm">
-          <h3 className="text-lg font-bold mb-6 px-1">Produção Geral (Vendas)</h3>
-          {totalWeight === 0 ? (
-            <p className="text-center text-gray-400 py-10 font-bold">Sem vendas registradas neste mês.</p>
-          ) : (
-            <div className="flex flex-col items-center">
-              <div className="size-56 rounded-full relative shadow-inner mb-8"
-                style={{ background: `conic-gradient(${gradientString})` }}>
-                <div className="absolute inset-6 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
-                  <span className="text-3xl font-black text-gray-800">{(totalWeight / 1000).toFixed(1)}t</span>
-                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Total</span>
-                </div>
+          <div className="space-y-6">
+            {/* Card de Receita */}
+            <section className="bg-white p-5 rounded-3xl shadow-sm border border-gray-50 flex flex-col gap-2 hover:shadow-md transition-shadow">
+              <p className="text-xs font-bold text-gray-400 uppercase">Receita Total do Mês</p>
+              <p className="text-4xl md:text-5xl font-black text-gray-800">R$ {revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+              <div className="flex items-center gap-1 text-[#10c65c] text-xs font-bold">
+                <span className="material-symbols-outlined text-[16px]">calendar_month</span> {monthNames[selectedMonth - 1]}
               </div>
+            </section>
 
-              {/* Legenda */}
-              <div className="grid grid-cols-2 gap-x-8 gap-y-4 w-full px-2">
-                {pieData.map((item) => (
-                  <div key={item.label} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="size-3 rounded-full shadow-sm" style={{ backgroundColor: item.color }}></div>
-                      <span className="text-xs font-bold text-gray-600 uppercase">{item.label}</span>
+            {/* Gráfico de Pizza - Produção Geral */}
+            <section className="bg-white p-6 rounded-3xl border border-gray-50 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-bold mb-6 px-1">Produção Geral (Vendas)</h3>
+              {totalWeight === 0 ? (
+                <p className="text-center text-gray-400 py-10 font-bold">Sem vendas registradas neste mês.</p>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <div className="size-56 md:size-64 rounded-full relative shadow-inner mb-8 transition-all hover:scale-105"
+                    style={{ background: `conic-gradient(${gradientString})` }}>
+                    <div className="absolute inset-6 bg-white rounded-full flex flex-col items-center justify-center shadow-sm">
+                      <span className="text-3xl md:text-4xl font-black text-gray-800">{(totalWeight / 1000).toFixed(1)}t</span>
+                      <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Total</span>
                     </div>
-                    <span className="text-sm font-black text-gray-800">{item.value}kg</span>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </section>
 
-        {/* Metas Lineares */}
-        <section className="space-y-4">
-          <h3 className="text-lg font-bold px-1">Progresso das Metas</h3>
-          <div className="grid grid-cols-1 gap-3">
-            {goalsData.map(g => {
-              const perc = g.target > 0 ? Math.min(Math.round((g.current / g.target) * 100), 100) : 0;
-              return (
-                <div key={g.name} className="bg-white p-5 rounded-3xl border border-gray-50 shadow-sm animate-page">
-                  <div className="flex justify-between items-end mb-3">
-                    <div>
-                      <h4 className="font-black text-xl">{g.name}</h4>
-                      <p className="text-xs text-gray-400 font-bold uppercase">{g.current}kg de {g.target}kg</p>
-                    </div>
-                    <span className="text-2xl font-black text-gray-800">{perc}%</span>
-                  </div>
-                  <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
-                    <div className={`h-full ${g.color} transition-all duration-700`} style={{ width: `${perc}%` }}></div>
+                  {/* Legenda */}
+                  <div className="grid grid-cols-2 md:grid-cols-2 gap-x-8 gap-y-4 w-full px-2">
+                    {pieData.map((item) => (
+                      <div key={item.label} className="flex items-center justify-between group">
+                        <div className="flex items-center gap-2">
+                          <div className="size-3 rounded-full shadow-sm group-hover:scale-125 transition-transform" style={{ backgroundColor: item.color }}></div>
+                          <span className="text-xs font-bold text-gray-600 uppercase">{item.label}</span>
+                        </div>
+                        <span className="text-sm font-black text-gray-800">{item.value}kg</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              )
-            })}
+              )}
+            </section>
           </div>
-        </section>
+
+          <div className="space-y-6">
+            {/* Metas Lineares */}
+            <section className="space-y-4">
+              <h3 className="text-lg font-bold px-1">Progresso das Metas</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
+                {goalsData.map(g => {
+                  const perc = g.target > 0 ? Math.min(Math.round((g.current / g.target) * 100), 100) : 0;
+                  return (
+                    <div key={g.name} className="bg-white p-5 rounded-3xl border border-gray-50 shadow-sm animate-page hover:shadow-md transition-shadow">
+                      <div className="flex justify-between items-end mb-3">
+                        <div>
+                          <h4 className="font-black text-xl">{g.name}</h4>
+                          <p className="text-xs text-gray-400 font-bold uppercase">{g.current}kg de {g.target}kg</p>
+                        </div>
+                        <span className="text-2xl font-black text-gray-800">{perc}%</span>
+                      </div>
+                      <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
+                        <div className={`h-full ${g.color} transition-all duration-700`} style={{ width: `${perc}%` }}></div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </section>
+          </div>
+
+        </div>
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 mx-auto p-4 bg-white/95 border-t border-gray-100 z-30 flex gap-2">
-        <button onClick={handleExportCSV} className="flex-1 h-14 bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
-          <span className="material-symbols-outlined">download</span> EXCEL
+      <footer className="absolute bottom-0 left-0 right-0 p-4 bg-white/95 border-t border-gray-100 z-30 flex gap-2 backdrop-blur-sm">
+        <button onClick={handleExportCSV} className="flex-1 h-14 bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 hover:bg-gray-800 transition-all">
+          <span className="material-symbols-outlined">download</span> <span className="hidden md:inline">EXPORTAR</span> EXCEL
         </button>
-        <button onClick={handleExportPDF} className="flex-1 h-14 bg-[#10c65c] text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
-          <span className="material-symbols-outlined">picture_as_pdf</span> PDF
+        <button onClick={handleExportPDF} className="flex-1 h-14 bg-[#10c65c] text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 hover:bg-[#0da54b] transition-all">
+          <span className="material-symbols-outlined">picture_as_pdf</span> <span className="hidden md:inline">GERAR</span> PDF
         </button>
       </footer>
     </div>

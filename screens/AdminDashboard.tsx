@@ -76,7 +76,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
   const stock = stats.entryWeight - stats.exitWeight;
 
   return (
-    <div className="fixed inset-0 no-scrollbar flex flex-col overflow-hidden bg-[#f6f8f7]">
+    <div className="absolute inset-0 no-scrollbar flex flex-col overflow-hidden bg-[#f6f8f7]">
       <SideMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
@@ -88,75 +88,77 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
       />
 
       {/* Header */}
-      <header className="flex-none flex items-center justify-between p-5 pb-2 bg-[#f6f8f7] z-20">
+      <header className="flex-none flex items-center justify-between p-5 pb-2 bg-[#f6f8f7] z-20 md:p-8">
         <div className="flex items-center gap-3">
-          <div className="relative size-10 rounded-full border-2 border-[#13ec6d] bg-cover bg-center cursor-pointer"
+          <div className="relative size-10 md:size-12 rounded-full border-2 border-[#13ec6d] bg-cover bg-center cursor-pointer transition-transform hover:scale-105"
             onClick={() => navigate('PROFILE')}
             style={{ backgroundImage: `url("${userLogo || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzEwYzY1YyI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi404IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnpNMCAzYzEuNjYgMCAzIDEuMzQgMyAzcy0xLjM0IDMtMyAzLTMtMS4zNC0zLTMgMS4zNC0zIDMtM3pNMCAxNC4yYy0yLjUgMC00LjcxLTEuMjgtNi0zLjIyLjAzLTEuOTkgNC0zLjA4IDYtMy4wOCAxLjk5IDAgNS45NyAxLjA5IDYgMy4wOC0xLjI5IDEuOTQtMy41IDMuMjItNiAzLjIyWiIvPjwvc3ZnPg=='}")` }}>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs text-gray-400">Bem vindo,</span>
-            <h2 className="text-lg font-bold leading-tight">{userName?.split(' ')[0] || 'Admin'}</h2>
+            <span className="text-xs md:text-sm text-gray-400">Bem vindo,</span>
+            <h2 className="text-lg md:text-xl font-bold leading-tight">{userName?.split(' ')[0] || 'Admin'}</h2>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="bg-white border text-sm border-gray-200 rounded-xl px-2 py-2 font-bold focus:outline-none focus:border-[#13ec6d]"
+            className="bg-white border text-sm md:text-base border-gray-200 rounded-xl px-2 py-2 font-bold focus:outline-none focus:border-[#13ec6d] cursor-pointer hover:bg-gray-50 transition-colors"
           >
             {months.map(m => (
               <option key={m.value} value={m.value}>{m.label}</option>
             ))}
           </select>
-          <button onClick={() => setIsMenuOpen(true)} className="p-1 rounded-full active:bg-gray-200 transition-colors">
-            <span className="material-symbols-outlined text-gray-800 text-3xl">menu</span>
+          <button onClick={() => setIsMenuOpen(true)} className="p-1 rounded-full hover:bg-gray-200 transition-colors">
+            <span className="material-symbols-outlined text-gray-800 text-3xl md:text-4xl">menu</span>
           </button>
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto overscroll-y-none">
+      <main className="flex-1 overflow-y-auto overscroll-y-none p-5 md:p-8 space-y-6">
         {/* Stats */}
-        <section className="p-5 grid grid-cols-3 gap-3">
+        <section className="grid grid-cols-3 gap-3 md:gap-6">
           {[
             { label: 'Entrada', val: `${(stats.entryWeight / 1000).toFixed(2)}t`, color: 'text-green-600', icon: 'arrow_downward' },
             { label: 'Saída', val: `${(stats.exitWeight / 1000).toFixed(2)}t`, color: 'text-red-500', icon: 'arrow_upward' },
             { label: 'Estoque', val: `${(stock / 1000).toFixed(2)}t`, color: 'text-blue-500', icon: 'inventory_2' }
           ].map((stat) => (
-            <div key={stat.label} className="flex flex-col items-center justify-center gap-1 rounded-2xl p-4 bg-white shadow-sm border border-gray-50">
+            <div key={stat.label} className="flex flex-col items-center justify-center gap-1 rounded-2xl p-4 bg-white shadow-sm border border-gray-50 hover:shadow-md transition-shadow">
               <div className="flex items-center gap-1 mb-1">
-                <span className={`material-symbols-outlined ${stat.color} text-[18px]`}>{stat.icon}</span>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">{stat.label}</p>
+                <span className={`material-symbols-outlined ${stat.color} text-[18px] md:text-[24px]`}>{stat.icon}</span>
+                <p className="text-[10px] md:text-xs font-bold text-gray-400 uppercase tracking-tight">{stat.label}</p>
               </div>
-              <p className="text-xl font-bold tracking-tight">{stat.val}</p>
+              <p className="text-xl md:text-2xl font-bold tracking-tight">{stat.val}</p>
             </div>
           ))}
         </section>
 
         {/* Revenue Card */}
-        <section className="px-5 pb-5">
-          <div className="relative w-full rounded-2xl p-6 shadow-lg shadow-[#13ec6d]/20 overflow-hidden bg-[#13ec6d]">
-            <div className="absolute right-0 top-0 h-full w-1/2 bg-white/10 -skew-x-12 translate-x-10"></div>
+        <section>
+          <div className="relative w-full rounded-2xl p-6 md:p-8 shadow-lg shadow-[#13ec6d]/20 overflow-hidden bg-[#13ec6d] group">
+            <div className="absolute right-0 top-0 h-full w-1/2 bg-white/10 -skew-x-12 translate-x-10 group-hover:translate-x-5 transition-transform duration-700"></div>
             <div className="relative z-10 flex flex-col gap-2">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2 bg-black/5 px-3 py-1 rounded-full backdrop-blur-sm">
                   <span className="material-symbols-outlined text-[18px] text-white">monetization_on</span>
-                  <span className="text-xs font-bold uppercase text-white">Receita Total</span>
+                  <span className="text-xs md:text-sm font-bold uppercase text-white">Receita Total</span>
                 </div>
-                <span className="material-symbols-outlined text-3xl text-white opacity-20">payments</span>
+                <span className="material-symbols-outlined text-3xl md:text-5xl text-white opacity-20 group-hover:opacity-30 transition-opacity">payments</span>
               </div>
               <div className="flex items-baseline gap-1 mt-1 text-white">
-                <span className="text-lg font-medium opacity-80">R$</span>
-                <span className="text-4xl font-extrabold tracking-tight">{stats.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="text-lg md:text-2xl font-medium opacity-80">R$</span>
+                <span className="text-4xl md:text-6xl font-extrabold tracking-tight">{stats.revenue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
             </div>
           </div>
         </section>
 
         {/* Quick Actions */}
-        <section className="px-5 pb-10">
-          <h3 className="text-gray-900 font-bold mb-4">Ações Rápidas</h3>
-          <div className="grid grid-cols-2 gap-4">
+        <section>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-gray-900 font-bold md:text-lg">Ações Rápidas</h3>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {[
               { id: 'ENTRY_REG', label: 'Registrar Entrada', icon: 'move_to_inbox' },
               { id: 'SALE_REG', label: 'Registrar Venda', icon: 'point_of_sale' },
@@ -171,13 +173,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
                 disabled={action.disabled}
                 className={`flex flex-col items-center gap-3 p-5 rounded-2xl bg-white shadow-sm border border-gray-100 group transition-all ${action.disabled
                   ? 'opacity-50 cursor-not-allowed grayscale'
-                  : 'active:scale-95 hover:border-[#13ec6d]/30'
+                  : 'active:scale-95 hover:border-[#13ec6d]/30 hover:shadow-md hover:-translate-y-1'
                   }`}
               >
-                <div className="size-14 rounded-full bg-[#13ec6d]/10 flex items-center justify-center group-hover:bg-[#13ec6d]/20 transition-colors">
-                  <span className="material-symbols-outlined text-[#13ec6d] text-[32px]">{action.icon}</span>
+                <div className="size-14 md:size-16 rounded-full bg-[#13ec6d]/10 flex items-center justify-center group-hover:bg-[#13ec6d]/20 transition-colors">
+                  <span className="material-symbols-outlined text-[#13ec6d] text-[32px] md:text-[40px]">{action.icon}</span>
                 </div>
-                <span className="text-sm font-semibold text-gray-800 text-center">{action.label}</span>
+                <span className="text-sm md:text-base font-semibold text-gray-800 text-center">{action.label}</span>
               </button>
             ))}
           </div>

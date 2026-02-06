@@ -101,87 +101,95 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
         <h2 className="flex-1 text-center pr-10 text-xl font-bold">Registrar Venda</h2>
       </header>
 
-      <main className="flex-1 p-4 pb-48 flex flex-col gap-6 overflow-y-auto no-scrollbar">
+      <main className="flex-1 p-4 pb-48 flex flex-col gap-6 overflow-y-auto no-scrollbar md:p-8">
 
-        {/* Buyer Selection */}
-        <section>
-          <h3 className="text-xl font-bold mb-2">Comprador</h3>
-          <p className="text-xs text-gray-400 font-medium mb-3">Selecione para quem você está vendendo</p>
-          <div className="relative">
-            <select
-              value={selectedBuyerId}
-              onChange={(e) => setSelectedBuyerId(e.target.value)}
-              className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-4 font-bold outline-none focus:border-[#10c65c] appearance-none"
-            >
-              <option value="">Selecione um comprador...</option>
-              {buyers.map(b => (
-                <option key={b.id} value={b.id}>{b.name}</option>
-              ))}
-            </select>
-            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
-          </div>
-        </section>
+        <div className="md:grid md:grid-cols-2 md:gap-8">
+          <div className="space-y-6">
+            {/* Buyer Selection */}
+            <section>
+              <h3 className="text-xl font-bold mb-2">Comprador</h3>
+              <p className="text-xs text-gray-400 font-medium mb-3">Selecione para quem você está vendendo</p>
+              <div className="relative">
+                <select
+                  value={selectedBuyerId}
+                  onChange={(e) => setSelectedBuyerId(e.target.value)}
+                  className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-4 font-bold outline-none focus:border-[#10c65c] appearance-none cursor-pointer hover:border-[#10c65c]/50 transition-colors"
+                >
+                  <option value="">Selecione um comprador...</option>
+                  {buyers.map(b => (
+                    <option key={b.id} value={b.id}>{b.name}</option>
+                  ))}
+                </select>
+                <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
+              </div>
+            </section>
 
-        <section>
-          <h3 className="text-xl font-bold mb-4">Material</h3>
-          <div className="grid grid-cols-3 gap-3">
-            {materials.map(m => (
-              <button key={m.id} onClick={() => { setSelectedMaterial(m); setSelectedSubclass(null); }} className={`h-20 rounded-2xl border-2 font-bold flex flex-col items-center justify-center transition-all ${selectedMaterial?.name === m.name ? 'border-[#10c65c] bg-[#10c65c]/5 text-[#10c65c]' : 'border-gray-100 bg-white text-gray-400'}`}>
-                <span className="text-sm">{m.name}</span>
-                {/* Optional info */}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {selectedMaterial && selectedMaterial.subclasses && selectedMaterial.subclasses.length > 0 && (
-          <div className="animate-page">
-            <h3 className="text-xs font-bold text-gray-400 uppercase mb-2">Subclassificação ({selectedMaterial.name})</h3>
-            <div className="flex flex-wrap gap-2">
-              {selectedMaterial.subclasses.map((sub: string) => {
-                const isSelected = selectedSubclass === sub;
-                return (
-                  <button key={sub} onClick={() => toggleSubclass(sub)} className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all ${isSelected ? 'border-[#10c65c] bg-[#10c65c] text-white' : 'border-gray-200 bg-white text-gray-500'}`}>
-                    {sub}
+            <section>
+              <h3 className="text-xl font-bold mb-4">Material</h3>
+              <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-4">
+                {materials.map(m => (
+                  <button key={m.id} onClick={() => { setSelectedMaterial(m); setSelectedSubclass(null); }} className={`h-20 rounded-2xl border-2 font-bold flex flex-col items-center justify-center transition-all ${selectedMaterial?.name === m.name ? 'border-[#10c65c] bg-[#10c65c]/5 text-[#10c65c] scale-105' : 'border-gray-100 bg-white text-gray-400 hover:border-gray-200'}`}>
+                    <span className="text-sm">{m.name}</span>
+                    {/* Optional info */}
                   </button>
-                );
-              })}
+                ))}
+              </div>
+            </section>
+
+            {selectedMaterial && selectedMaterial.subclasses && selectedMaterial.subclasses.length > 0 && (
+              <div className="animate-page">
+                <h3 className="text-xs font-bold text-gray-400 uppercase mb-2">Subclassificação ({selectedMaterial.name})</h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedMaterial.subclasses.map((sub: string) => {
+                    const isSelected = selectedSubclass === sub;
+                    return (
+                      <button key={sub} onClick={() => toggleSubclass(sub)} className={`px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all ${isSelected ? 'border-[#10c65c] bg-[#10c65c] text-white scale-105' : 'border-gray-200 bg-white text-gray-500 hover:bg-gray-50'}`}>
+                        {sub}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-6 h-fit md:sticky md:top-4">
+            <h3 className="text-lg font-bold text-gray-800 hidden md:block">Detalhes da Venda</h3>
+
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-1">
+              <div>
+                <label className="text-sm font-bold text-gray-400 block mb-2">Peso da Venda (kg)</label>
+                <div className="flex items-center h-16 bg-gray-50 rounded-2xl border-2 border-gray-100 px-2 focus-within:border-[#10c65c] transition-colors">
+                  <button onClick={() => setWeight(w => Math.max(0, w - 10))} className="size-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-gray-200 transition-colors"><span className="material-symbols-outlined">remove</span></button>
+                  <input type="number" className="flex-1 bg-transparent text-center text-2xl font-black outline-none" value={weight} onChange={e => setWeight(Number(e.target.value))} />
+                  <button onClick={() => setWeight(w => w + 10)} className="size-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-[#10c65c] hover:bg-gray-200 transition-colors"><span className="material-symbols-outlined">add</span></button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-bold text-gray-400 block mb-2">Preço Unitário (R$/kg)</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-gray-400">R$</span>
+                  <input type="number" step="0.10" className="w-full h-14 bg-gray-50 rounded-2xl border border-gray-100 pl-12 pr-4 text-xl font-bold outline-none focus:border-[#10c65c] transition-colors" value={unitPrice} onChange={e => setUnitPrice(Number(e.target.value))} />
+                </div>
+              </div>
             </div>
-          </div>
-        )}
 
-        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-6">
-          <div>
-            <label className="text-sm font-bold text-gray-400 block mb-2">Peso da Venda (kg)</label>
-            <div className="flex items-center h-16 bg-gray-50 rounded-2xl border-2 border-gray-100 px-2 focus-within:border-[#10c65c]">
-              <button onClick={() => setWeight(w => Math.max(0, w - 10))} className="size-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-500"><span className="material-symbols-outlined">remove</span></button>
-              <input type="number" className="flex-1 bg-transparent text-center text-2xl font-black outline-none" value={weight} onChange={e => setWeight(Number(e.target.value))} />
-              <button onClick={() => setWeight(w => w + 10)} className="size-10 rounded-lg flex items-center justify-center text-gray-400 hover:text-[#10c65c]"><span className="material-symbols-outlined">add</span></button>
+            <div className="pt-4 border-t border-gray-50 flex justify-between items-center">
+              <span className="text-xs font-bold text-gray-400 uppercase">Total Estimado</span>
+              <span className="text-3xl font-black text-[#10c65c]">R$ {(weight * unitPrice).toFixed(2)}</span>
             </div>
+
+            <button onClick={handleFinalize} disabled={loading} className="h-14 w-full bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-black/20 hover:bg-gray-800 hover:shadow-xl">
+              <span className="material-symbols-outlined">payments</span>
+              {loading ? 'FINALIZANDO...' : 'FINALIZAR VENDA'}
+            </button>
+
+            <button onClick={() => navigate('SALES_HISTORY')} className="h-14 w-full bg-white text-gray-800 border-2 border-gray-100 rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-gray-50 hover:border-gray-300">
+              <span className="material-symbols-outlined">list_alt</span>
+              VER REGISTROS
+            </button>
           </div>
-
-          <div>
-            <label className="text-sm font-bold text-gray-400 block mb-2">Preço Unitário (R$/kg)</label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-gray-400">R$</span>
-              <input type="number" step="0.10" className="w-full h-14 bg-gray-50 rounded-2xl border border-gray-100 pl-12 pr-4 text-xl font-bold outline-none focus:border-[#10c65c]" value={unitPrice} onChange={e => setUnitPrice(Number(e.target.value))} />
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-gray-50 flex justify-between items-center">
-            <span className="text-xs font-bold text-gray-400 uppercase">Total Estimado</span>
-            <span className="text-3xl font-black text-[#10c65c]">R$ {(weight * unitPrice).toFixed(2)}</span>
-          </div>
-
-          <button onClick={handleFinalize} disabled={loading} className="h-14 w-full bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50 shadow-lg shadow-black/20">
-            <span className="material-symbols-outlined">payments</span>
-            {loading ? 'FINALIZANDO...' : 'FINALIZAR VENDA'}
-          </button>
-
-          <button onClick={() => navigate('SALES_HISTORY')} className="h-14 w-full bg-white text-gray-800 border-2 border-gray-100 rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-gray-50">
-            <span className="material-symbols-outlined">list_alt</span>
-            VER REGISTROS
-          </button>
         </div>
       </main>
     </div>
