@@ -18,6 +18,7 @@ const EntryRegistration: React.FC<EntryRegistrationProps> = ({ navigate, onSucce
 
   // States for Avulso or Associate lookup
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
   useEffect(() => {
     fetchMaterials();
@@ -74,7 +75,8 @@ const EntryRegistration: React.FC<EntryRegistrationProps> = ({ navigate, onSucce
       material_name: selectedMaterial.name,
       subclass: selectedSubclass,
       weight: parseFloat(weight),
-      avulso_name: type === 'AVULSO' ? (searchQuery || 'Anônimo') : null
+      avulso_name: type === 'AVULSO' ? (searchQuery || 'Anônimo') : null,
+      created_at: selectedDate
     };
 
     const { error } = await supabase.from('entries').insert(entryData);
@@ -88,6 +90,7 @@ const EntryRegistration: React.FC<EntryRegistrationProps> = ({ navigate, onSucce
       setWeight('0');
       setSelectedMaterial(null);
       setSelectedSubclass(null);
+      setSelectedDate(new Date().toISOString().split('T')[0]);
       // Optional: onSuccess(); if we want to navigate back immediately
     }
   };
@@ -128,6 +131,17 @@ const EntryRegistration: React.FC<EntryRegistrationProps> = ({ navigate, onSucce
                     />
                   </div>
                 </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-bold text-gray-500 ml-1">Data da Entrada</label>
+                  <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-4 text-base font-bold text-gray-700 focus:border-[#10c65c] outline-none transition-colors"
+                  />
+                </div>
+
                 <hr className="border-gray-200 md:hidden" />
               </>
             )}
@@ -190,9 +204,9 @@ const EntryRegistration: React.FC<EntryRegistrationProps> = ({ navigate, onSucce
               </button>
             </div>
           </div>
-        </div>
-      </main>
-    </div>
+        </div >
+      </main >
+    </div >
   );
 };
 

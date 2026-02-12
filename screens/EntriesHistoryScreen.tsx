@@ -70,6 +70,8 @@ const EntriesHistoryScreen: React.FC<EntriesHistoryScreenProps> = ({ navigate })
         if (error) {
             alert("Erro: " + error.message);
         } else {
+            alert("Entrada excluída com sucesso!");
+            setEditingEntry(null);
             fetchEntries();
         }
     }
