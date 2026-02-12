@@ -185,6 +185,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
           </div>
         </section>
       </main>
+
+      <div className="h-8" />
     </div>
   );
 };
