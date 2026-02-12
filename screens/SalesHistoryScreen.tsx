@@ -18,6 +18,7 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
     const [editWeight, setEditWeight] = useState(0);
     const [editPrice, setEditPrice] = useState(0);
     const [editBuyerId, setEditBuyerId] = useState('');
+    const [editDate, setEditDate] = useState('');
 
     const subclasses: Record<string, string[]> = {
         'PET': ['Cristal', 'Verde', 'Colorido'],
@@ -57,6 +58,12 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
         setEditWeight(sale.weight);
         setEditPrice(sale.price_per_kg);
         setEditBuyerId(sale.buyer_id || '');
+
+        if (sale.created_at) {
+            const d = new Date(sale.created_at);
+            const localIso = new Date(d.getTime() - (d.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+            setEditDate(localIso);
+        }
     };
 
     const handleSaveEdit = async () => {
@@ -68,7 +75,8 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
             weight: editWeight,
             price_per_kg: editPrice,
             total_value: editWeight * editPrice,
-            buyer_id: editBuyerId === '' ? null : editBuyerId // Ensure valid UUID or null
+            buyer_id: editBuyerId === '' ? null : editBuyerId, // Ensure valid UUID or null
+            created_at: new Date(editDate).toISOString()
         };
 
         const { error } = await supabase
@@ -89,11 +97,20 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
     const handleDelete = async (id: string) => {
         if (!confirm('Tem certeza que deseja excluir esta venda?')) return;
 
-        const { error } = await supabase.from('sales').delete().eq('id', id);
-        if (error) {
-            alert('Erro ao excluir: ' + error.message);
-        } else {
-            fetchSales();
+        try {
+            const { error, data } = await supabase.from('sales').delete().eq('id', id).select();
+
+            if (error) {
+                alert('Erro ao excluir: ' + error.message);
+            } else if (!data || data.length === 0) {
+                alert('Erro: A venda não foi excluída. Verifique se você tem permissão (RLS) para realizar esta ação.');
+            } else {
+                // Success
+                fetchSales();
+            }
+        } catch (err) {
+            console.error('Exception deleting sale:', err);
+            alert('Ocorreu um erro inesperado ao tentar excluir.');
         }
     };
 
@@ -131,6 +148,16 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
                             </select>
                             <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
                         </div>
+                    </section>
+
+                    <section className="mb-6">
+                        <label className="block text-sm font-bold text-gray-400 mb-2">Data e Hora</label>
+                        <input
+                            type="datetime-local"
+                            value={editDate}
+                            onChange={(e) => setEditDate(e.target.value)}
+                            className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-4 font-bold outline-none focus:border-[#10c65c] text-gray-600 appearance-none"
+                        />
                     </section>
 
                     <section className="mb-6">
@@ -228,7 +255,20 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
                                             <span className="text-sm font-bold text-gray-700">R$ {sale.total_value.toFixed(2)}</span>
                                         </div>
                                     </div>
-                                    <span className="material-symbols-outlined text-gray-300">edit</span>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDelete(sale.id);
+                                            }}
+                                            className="size-8 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-100 transition-colors"
+                                        >
+                                            <span className="material-symbols-outlined text-[20px]">delete</span>
+                                        </button>
+                                        <div className="size-8 rounded-full bg-gray-50 text-gray-400 flex items-center justify-center">
+                                            <span className="material-symbols-outlined text-[20px]">edit</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         ))}

@@ -78,6 +78,8 @@ const BuyersListScreen: React.FC<BuyersListScreenProps> = ({ navigate }) => {
         if (error) {
             alert("Erro ao excluir: " + error.message);
         } else {
+            alert("Comprador excluído com sucesso!");
+            setEditingBuyer(null);
             fetchBuyers();
         }
     }

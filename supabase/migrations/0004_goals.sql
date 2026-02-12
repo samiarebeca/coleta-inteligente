@@ -41,8 +41,4 @@ VALUES
     ('Papel/Papelão', 2, 2026, 3328.00),  -- Ex: 1200kg (Papelão?) - O user pediu "Papel", vamos usar "Papel" mas talvez ele queira "Papelão".
     ('Plástico', 2, 2026, 7800.00); -- Ex: 1500kg
 
--- OBS: Se na verdade "Papel" for "Papelão" no banco, o frontend pode não encontrar se buscar por "Papelão".
--- No frontend estamos usando 'Papelão', 'Plástico', 'Alumínio' (Metal?), 'Vidro'.
--- Vou inserir também com os nomes que usamos no app para garantir compatibilidade.
--- Metal = Alumínio, Papel = Papelão.
 
