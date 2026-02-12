@@ -601,19 +601,17 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ navigate }) => {
             </section>
           </div>
 
-
-
-        </div>
-
-
-        <footer className="absolute bottom-0 left-0 right-0 p-4 bg-white/95 border-t border-gray-100 z-30 flex gap-2 backdrop-blur-sm">
           <button onClick={handleExportCSV} className="flex-1 h-14 bg-black text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 hover:bg-gray-800 transition-all shadow-lg shadow-black/20">
             <span className="material-symbols-outlined">download</span> <span className="hidden md:inline">EXPORTAR</span> CSV
           </button>
           <button onClick={handleExportPDF} className="flex-1 h-14 bg-[#10c65c] text-white rounded-2xl font-bold flex items-center justify-center gap-2 active:scale-95 hover:bg-[#0da54b] transition-all shadow-lg shadow-[#10c65c]/20">
             <span className="material-symbols-outlined">picture_as_pdf</span> <span className="hidden md:inline">GERAR</span> PDF
           </button>
-        </footer>
+
+        </div>
+
+
+
       </main>
 
 
