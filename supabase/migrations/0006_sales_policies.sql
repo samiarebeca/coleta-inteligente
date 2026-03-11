@@ -7,7 +7,6 @@ BEGIN
         CREATE POLICY "Authenticated users can update sales" ON public.sales FOR UPDATE USING (auth.role() = 'authenticated');
     END IF;
 END $$;
-
 -- Permitir que usuários autenticados excluam vendas
 DO $$ 
 BEGIN

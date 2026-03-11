@@ -35,6 +35,26 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ navigate }) => {
     fetchReportData();
   }, [selectedMonth, selectedYear]);
 
+  const resolveActiveAssociationId = async () => {
+    const storedAssociationId = localStorage.getItem('selectedAssoc');
+    if (storedAssociationId) return storedAssociationId;
+
+    const preferredRole = localStorage.getItem('preferredRole');
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.user?.id) return null;
+
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('role, association_id')
+      .eq('user_id', session.user.id);
+
+    if (!profiles || profiles.length === 0) return null;
+
+    const activeProfile = profiles.find(profile => profile.role === preferredRole) || profiles[0];
+    return activeProfile?.association_id || null;
+  };
+
   const fetchReportData = async () => {
     setLoading(true);
 
@@ -177,11 +197,17 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ navigate }) => {
         { label: 'Plástico', goalName: 'PLÁSTICO', dbNames: ['Plástico', 'PET', 'Plastico', 'PVC', 'PEAD', 'MP'], color: 'bg-red-500' }
       ];
 
-      const { data: goalsDB } = await supabase
+      const associationId = await resolveActiveAssociationId();
+
+      const goalsQuery = supabase
         .from('goals')
         .select('*')
         .eq('month', selectedMonth)
         .eq('year', selectedYear);
+
+      const { data: goalsDB } = associationId
+        ? await goalsQuery.eq('association_id', associationId)
+        : { data: [] };
 
       const mergedGoals = reportCategories.map(cat => {
         let currentWeight = 0;

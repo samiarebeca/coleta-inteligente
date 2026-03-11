@@ -3,8 +3,6 @@
 
 -- 1. Atualizar a tabela Materials para ter 'subclass'
 ALTER TABLE public.materials ADD COLUMN IF NOT EXISTS subclass TEXT;
-
-
 -- 2. Tabela Entries (Entradas)
 CREATE TABLE IF NOT EXISTS public.entries (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -25,10 +23,8 @@ CREATE TABLE IF NOT EXISTS public.entries (
     
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
-
 -- Políticas de segurança para Entries
 ALTER TABLE public.entries ENABLE ROW LEVEL SECURITY;
-
 DO $$ 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Public read entries' AND tablename = 'entries') THEN
@@ -47,8 +43,6 @@ BEGIN
         CREATE POLICY "Authenticated users can delete entries" ON public.entries FOR DELETE USING (auth.role() = 'authenticated');
     END IF;
 END $$;
-
-
 -- Políticas de segurança para Materials (caso faltem para update/insert)
 DO $$ 
 BEGIN

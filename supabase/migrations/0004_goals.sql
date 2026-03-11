@@ -13,10 +13,8 @@ CREATE TABLE IF NOT EXISTS public.goals (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE(material_name, month, year)
 );
-
 -- Políticas de segurança (se ainda não existirem)
 ALTER TABLE public.goals ENABLE ROW LEVEL SECURITY;
-
 DO $$ 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Public read goals' AND tablename = 'goals') THEN
@@ -27,18 +25,19 @@ BEGIN
         CREATE POLICY "Authenticated users can manage goals" ON public.goals FOR ALL USING (auth.role() = 'authenticated');
     END IF;
 END $$;
-
-
 -- 2. Limpar metas existentes para Fevereiro 2026 para recriá-las com os novos valores
 DELETE FROM public.goals WHERE year = 2026 AND month = 2;
-
 -- 3. Inserir metas específicas para Fevereiro de 2026
 -- Materiais: Metal, Vidro, Papel, Plástico
 INSERT INTO public.goals (material_name, month, year, target_weight)
 VALUES 
-    ('Metal', 2, 2026, 3900.00),   -- Ex: 700kg
+    ('METAL', 2, 2026, 3900.00),   -- Ex: 700kg
     ('Vidro', 2, 2026, 9600.00),   -- Ex: 500kg
     ('Papel/Papelão', 2, 2026, 3328.00),  -- Ex: 1200kg (Papelão?) - O user pediu "Papel", vamos usar "Papel" mas talvez ele queira "Papelão".
-    ('Plástico', 2, 2026, 7800.00); -- Ex: 1500kg
+    ('Plástico', 2, 2026, 7800.00);
+-- Ex: 1500kg
 
-
+-- OBS: Se na verdade "Papel" for "Papelão" no banco, o frontend pode não encontrar se buscar por "Papelão".
+-- No frontend estamos usando 'Papelão', 'Plástico', 'Alumínio' (Metal?), 'Vidro'.
+-- Vou inserir também com os nomes que usamos no app para garantir compatibilidade.
+-- Metal = Alumínio, Papel = Papelão.;

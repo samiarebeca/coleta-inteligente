@@ -10,10 +10,8 @@ CREATE TABLE IF NOT EXISTS public.buyers (
     active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
-
 -- Políticas de segurança para Buyers
 ALTER TABLE public.buyers ENABLE ROW LEVEL SECURITY;
-
 DO $$ 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Public read buyers' AND tablename = 'buyers') THEN
@@ -28,8 +26,6 @@ BEGIN
         CREATE POLICY "Authenticated users can update buyers" ON public.buyers FOR UPDATE USING (auth.role() = 'authenticated');
     END IF;
 END $$;
-
-
 -- 2. Tabela Buyer Materials (Preços e Materiais por Comprador)
 CREATE TABLE IF NOT EXISTS public.buyer_materials (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -39,10 +35,8 @@ CREATE TABLE IF NOT EXISTS public.buyer_materials (
     active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
-
 -- Políticas de segurança para Buyer Materials
 ALTER TABLE public.buyer_materials ENABLE ROW LEVEL SECURITY;
-
 DO $$ 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Public read buyer_materials' AND tablename = 'buyer_materials') THEN
@@ -53,8 +47,6 @@ BEGIN
         CREATE POLICY "Authenticated users can create buyer_materials" ON public.buyer_materials FOR INSERT WITH CHECK (auth.role() = 'authenticated');
     END IF;
 END $$;
-
-
 -- 3. Tabela Sales (Vendas)
 CREATE TABLE IF NOT EXISTS public.sales (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -66,10 +58,8 @@ CREATE TABLE IF NOT EXISTS public.sales (
     total_value DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
-
 -- Políticas de segurança para Sales
 ALTER TABLE public.sales ENABLE ROW LEVEL SECURITY;
-
 DO $$ 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Public read sales' AND tablename = 'sales') THEN
@@ -80,4 +70,3 @@ BEGIN
         CREATE POLICY "Authenticated users can create sales" ON public.sales FOR INSERT WITH CHECK (auth.role() = 'authenticated');
     END IF;
 END $$;
-

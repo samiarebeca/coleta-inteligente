@@ -42,3 +42,23 @@ coverage/
 
 # Supabase
 supabase/tmp/
+supabase/.temp/
+
+# Large local artifacts
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
+*.bz2
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.psd
+*.ai
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.bak
