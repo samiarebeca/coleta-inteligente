@@ -283,94 +283,235 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ navigate }) => {
     document.body.removeChild(link);
   };
 
+  const createPdfSnapshot = () => {
+    const sectionIds = [
+      'report-revenue-card',
+      'report-revenue-chart',
+      'report-volume-chart',
+      'report-goals-section',
+    ];
+
+    const sections = sectionIds
+      .map(id => document.getElementById(id))
+      .filter((element): element is HTMLElement => Boolean(element));
+
+    if (sections.length === 0) return null;
+
+    const snapshotRoot = document.createElement('div');
+    snapshotRoot.setAttribute('data-pdf-snapshot', 'true');
+    snapshotRoot.style.position = 'fixed';
+    snapshotRoot.style.left = '-20000px';
+    snapshotRoot.style.top = '0';
+    snapshotRoot.style.width = '1120px';
+    snapshotRoot.style.background = '#f8fafc';
+    snapshotRoot.style.padding = '20px';
+    snapshotRoot.style.zIndex = '-1';
+
+    const style = document.createElement('style');
+    style.textContent = `
+      [data-pdf-snapshot="true"] * {
+        box-sizing: border-box;
+        animation: none !important;
+        transition: none !important;
+      }
+
+      [data-pdf-snapshot="true"] .pdf-shell {
+        background: #f8fafc;
+        color: #111827;
+        font-family: Arial, sans-serif;
+      }
+
+      [data-pdf-snapshot="true"] .pdf-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin-bottom: 16px;
+        padding: 0 4px 12px;
+        border-bottom: 1px solid #d1d5db;
+      }
+
+      [data-pdf-snapshot="true"] .pdf-grid {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 14px;
+        align-items: start;
+      }
+
+      [data-pdf-snapshot="true"] .pdf-column {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      [data-pdf-snapshot="true"] section {
+        margin: 0 !important;
+        border-radius: 18px !important;
+        box-shadow: none !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-revenue-card,
+      [data-pdf-snapshot="true"] #report-revenue-chart,
+      [data-pdf-snapshot="true"] #report-volume-chart,
+      [data-pdf-snapshot="true"] #report-goals-section > div > div {
+        padding: 16px !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-revenue-card p:first-child,
+      [data-pdf-snapshot="true"] #report-revenue-chart span,
+      [data-pdf-snapshot="true"] #report-volume-chart span,
+      [data-pdf-snapshot="true"] #report-goals-section p {
+        font-size: 11px !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-revenue-card p:nth-child(2) {
+        font-size: 34px !important;
+        line-height: 1.05 !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-revenue-chart h3,
+      [data-pdf-snapshot="true"] #report-volume-chart h3,
+      [data-pdf-snapshot="true"] #report-goals-section h3 {
+        font-size: 18px !important;
+        margin: 0 !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-revenue-chart .size-56,
+      [data-pdf-snapshot="true"] #report-revenue-chart .md\\:size-64 {
+        width: 150px !important;
+        height: 150px !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-revenue-chart .absolute.inset-6 {
+        inset: 18px !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-revenue-chart .text-2xl,
+      [data-pdf-snapshot="true"] #report-revenue-chart .md\\:text-3xl {
+        font-size: 20px !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-revenue-chart .mb-8,
+      [data-pdf-snapshot="true"] #report-revenue-chart .mt-6,
+      [data-pdf-snapshot="true"] #report-volume-chart .mt-6,
+      [data-pdf-snapshot="true"] #report-volume-chart .mb-6 {
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-volume-chart .h-64 {
+        height: 140px !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-revenue-chart .py-3,
+      [data-pdf-snapshot="true"] #report-volume-chart .py-3 {
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-revenue-chart .text-lg,
+      [data-pdf-snapshot="true"] #report-volume-chart .text-lg,
+      [data-pdf-snapshot="true"] #report-goals-section .text-xl,
+      [data-pdf-snapshot="true"] #report-goals-section .text-2xl {
+        font-size: 16px !important;
+        line-height: 1.2 !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-goals-section .grid {
+        gap: 10px !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-goals-section .mb-3,
+      [data-pdf-snapshot="true"] #report-revenue-chart .mb-6,
+      [data-pdf-snapshot="true"] #report-volume-chart .mb-6 {
+        margin-bottom: 10px !important;
+      }
+
+      [data-pdf-snapshot="true"] #report-goals-section .h-4 {
+        height: 12px !important;
+      }
+    `;
+
+    const shell = document.createElement('div');
+    shell.className = 'pdf-shell';
+
+    const header = document.createElement('div');
+    header.className = 'pdf-header';
+    header.innerHTML = `
+      <div>
+        <div style="font-size: 24px; font-weight: 700;">Relatorio de Coleta Inteligente</div>
+        <div style="font-size: 13px; color: #6b7280; margin-top: 4px;">Periodo: ${monthNames[selectedMonth - 1]} de ${selectedYear}</div>
+      </div>
+      <div style="font-size: 11px; color: #9ca3af;">Gerado em ${new Date().toLocaleDateString('pt-BR')}</div>
+    `;
+
+    const grid = document.createElement('div');
+    grid.className = 'pdf-grid';
+
+    const leftColumn = document.createElement('div');
+    leftColumn.className = 'pdf-column';
+
+    const rightColumn = document.createElement('div');
+    rightColumn.className = 'pdf-column';
+
+    sections.forEach(section => {
+      const clone = section.cloneNode(true) as HTMLElement;
+      if (section.id === 'report-goals-section') {
+        rightColumn.appendChild(clone);
+      } else {
+        leftColumn.appendChild(clone);
+      }
+    });
+
+    grid.appendChild(leftColumn);
+    grid.appendChild(rightColumn);
+    shell.appendChild(header);
+    shell.appendChild(grid);
+    snapshotRoot.appendChild(style);
+    snapshotRoot.appendChild(shell);
+
+    document.body.appendChild(snapshotRoot);
+    return snapshotRoot;
+  };
+
   const handleExportPDF = async () => {
+    let snapshotRoot: HTMLDivElement | null = null;
     try {
       setLoading(true);
-      const doc = new jsPDF('p', 'mm', 'a4');
+      snapshotRoot = createPdfSnapshot();
+      if (!snapshotRoot) {
+        alert("Nao foi possivel montar o relatorio para PDF.");
+        return;
+      }
+
+      const doc = new jsPDF('l', 'mm', 'a4');
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
-      const margin = 10;
+      const margin = 8;
       const contentWidth = pageWidth - (margin * 2);
+      const contentHeight = pageHeight - (margin * 2);
 
-      // Header
-      doc.setFontSize(18);
-      doc.setTextColor(40);
-      doc.text("Relatório de Coleta Inteligente", margin, 20);
+      const canvas = await html2canvas(snapshotRoot, {
+        scale: 2,
+        backgroundColor: '#f8fafc'
+      });
 
-      doc.setFontSize(12);
-      doc.setTextColor(100);
-      doc.text(`Período: ${monthNames[selectedMonth - 1]} de ${selectedYear}`, margin, 28);
+      const imgData = canvas.toDataURL('image/png');
+      const widthRatio = contentWidth / canvas.width;
+      const heightRatio = contentHeight / canvas.height;
+      const scale = Math.min(widthRatio, heightRatio);
+      const imgWidth = canvas.width * scale;
+      const imgHeight = canvas.height * scale;
+      const offsetX = (pageWidth - imgWidth) / 2;
+      const offsetY = (pageHeight - imgHeight) / 2;
 
-      doc.setDrawColor(200);
-      doc.line(margin, 35, pageWidth - margin, 35);
-
-      let currentY = 45;
-
-      // Helper to capture and add image
-      const addSectionToPDF = async (elementId: string, title?: string) => {
-        const element = document.getElementById(elementId);
-        if (!element) return;
-
-        // Optional: Title for the section in PDF if not in the component
-        if (title) {
-          doc.setFontSize(14);
-          doc.setTextColor(0);
-          doc.text(title, margin, currentY);
-          currentY += 8;
-        }
-
-        const canvas = await html2canvas(element, {
-          scale: 2,
-          backgroundColor: '#ffffff'
-        });
-        const imgData = canvas.toDataURL('image/png');
-        const imgWidth = contentWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        // Check if we need a new page
-        if (currentY + imgHeight > pageHeight - margin) {
-          doc.addPage();
-          currentY = margin + 10;
-        }
-
-        doc.addImage(imgData, 'PNG', margin, currentY, imgWidth, imgHeight);
-        currentY += imgHeight + 10;
-      };
-
-      // 1. Revenue Card
-      await addSectionToPDF('report-revenue-card');
-
-      // 2. Charts Row (Side by Side if possible, or stacked)
-      // For simplicity and readability in A4 vertical, stacking is often safer to avoid tiny text.
-      // But let's try to fit them nicely.
-      // Actually, users usually prefer larger charts. Let's stack them but maybe cap the height?
-      // The current implementation takes the full width.
-
-      await addSectionToPDF('report-revenue-chart');
-      await addSectionToPDF('report-volume-chart');
-
-      // Force new page for Goals if not much space left
-      if (currentY > pageHeight - 100) {
-        doc.addPage();
-        currentY = 20;
-      }
-
-      await addSectionToPDF('report-goals-section');
-
-      // Footer
-      const totalPages = (doc as any).internal.getNumberOfPages();
-      for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-        doc.setFontSize(10);
-        doc.setTextColor(150);
-        doc.text(`Página ${i} de ${totalPages} - Gerado em ${new Date().toLocaleDateString()}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
-      }
-
+      doc.addImage(imgData, 'PNG', offsetX, offsetY, imgWidth, imgHeight, undefined, 'FAST');
       doc.save(`relatorio_${selectedMonth}_${selectedYear}.pdf`);
     } catch (e) {
       console.error("PDF Error", e);
       alert("Erro ao gerar PDF.");
     } finally {
+      snapshotRoot?.remove();
       setLoading(false);
     }
   };
