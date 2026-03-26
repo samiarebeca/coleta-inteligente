@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Screen } from '../App';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, resolveActiveAssociationId } from '../lib/supabaseClient';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -35,26 +35,6 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ navigate }) => {
     fetchReportData();
   }, [selectedMonth, selectedYear]);
 
-  const resolveActiveAssociationId = async () => {
-    const storedAssociationId = localStorage.getItem('selectedAssoc');
-    if (storedAssociationId) return storedAssociationId;
-
-    const preferredRole = localStorage.getItem('preferredRole');
-    const { data: { session } } = await supabase.auth.getSession();
-
-    if (!session?.user?.id) return null;
-
-    const { data: profiles } = await supabase
-      .from('profiles')
-      .select('role, association_id')
-      .eq('user_id', session.user.id);
-
-    if (!profiles || profiles.length === 0) return null;
-
-    const activeProfile = profiles.find(profile => profile.role === preferredRole) || profiles[0];
-    return activeProfile?.association_id || null;
-  };
-
   const fetchReportData = async () => {
     setLoading(true);
 
@@ -66,12 +46,18 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ navigate }) => {
     const endDate = end.toISOString();
 
     // 1. Fetch Sales
-    const { data: salesData, error } = await supabase
+    const assocId = await resolveActiveAssociationId();
+    let query = supabase
       .from('sales')
       .select('*, buyers(name)')
       .gte('created_at', startDate)
       .lte('created_at', endDate)
       .order('created_at', { ascending: false });
+
+    if (assocId) {
+      query = query.eq('association_id', assocId);
+    }
+    const { data: salesData, error } = await query;
 
     if (!error && salesData) {
       setSales(salesData);

@@ -43,7 +43,6 @@ const BuyerRegistration: React.FC<BuyerRegistrationProps> = ({ navigate }) => {
       return;
     }
 
-    setLoading(true);
     try {
       // 1. Insert Buyer
       const { data: buyer, error: buyerError } = await supabase

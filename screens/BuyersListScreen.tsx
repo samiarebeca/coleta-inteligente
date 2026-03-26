@@ -28,6 +28,7 @@ const BuyersListScreen: React.FC<BuyersListScreenProps> = ({ navigate }) => {
             .select('*')
             .order('name', { ascending: true });
 
+
         if (error) {
             console.error('Error fetching buyers:', error);
         } else {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Screen } from '../App';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, resolveActiveAssociationId } from '../lib/supabaseClient';
 
 interface EntryRegistrationProps {
   navigate: (screen: Screen) => void;
@@ -69,8 +69,11 @@ const EntryRegistration: React.FC<EntryRegistrationProps> = ({ navigate, onSucce
 
     setLoading(true);
 
+    const assocId = await resolveActiveAssociationId();
+
     const entryData = {
       source_type: type === 'ASSOCIADO' ? 'associate' : 'avulso',
+      association_id: assocId,
       material_id: selectedMaterial.id,
       material_name: selectedMaterial.name,
       subclass: selectedSubclass,

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Screen } from '../App';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, resolveActiveAssociationId } from '../lib/supabaseClient';
 
 interface SaleRegistrationProps {
   navigate: (screen: Screen) => void;
@@ -17,14 +17,14 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
   const [buyers, setBuyers] = useState<any[]>([]);
   const [selectedBuyerId, setSelectedBuyerId] = useState('');
   const [loading, setLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
   useEffect(() => {
     // Fetch active buyers
     const fetchBuyers = async () => {
-      const { data, error } = await supabase
-        .from('buyers')
-        .select('*')
-        .eq('active', true);
+      const assocId = await resolveActiveAssociationId();
+      let query = supabase.from('buyers').select('*').eq('active', true);
+      const { data, error } = await query;
 
       if (data) {
         setBuyers(data);
@@ -69,6 +69,7 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
 
     setLoading(true);
     try {
+      const assocId = await resolveActiveAssociationId();
       const { error } = await supabase
         .from('sales')
         .insert({
@@ -77,7 +78,9 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
           subclass: selectedSubclass,
           weight: weight,
           price_per_kg: unitPrice,
-          total_value: weight * unitPrice
+          total_value: weight * unitPrice,
+          created_at: selectedDate,
+          association_id: assocId
         });
 
       if (error) throw error;
@@ -122,6 +125,16 @@ const SaleRegistration: React.FC<SaleRegistrationProps> = ({ navigate, onSuccess
                 </select>
                 <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
               </div>
+            </section>
+
+            <section>
+              <h3 className="text-xl font-bold mb-2">Data da Venda</h3>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="w-full h-14 bg-white border border-gray-100 rounded-2xl px-4 text-base font-bold text-gray-700 focus:border-[#10c65c] outline-none transition-colors"
+              />
             </section>
 
             <section>

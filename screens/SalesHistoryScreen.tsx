@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Screen } from '../App';
-import { supabase } from '../lib/supabaseClient';
+import { supabase, resolveActiveAssociationId } from '../lib/supabaseClient';
 
 interface SalesHistoryScreenProps {
     navigate: (screen: Screen) => void;
@@ -33,10 +33,17 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
 
     const fetchSales = async () => {
         setLoading(true);
-        const { data, error } = await supabase
+        const assocId = await resolveActiveAssociationId();
+        let query = supabase
             .from('sales')
             .select('*, buyers(name)')
             .order('created_at', { ascending: false });
+
+        if (assocId) {
+            query = query.eq('association_id', assocId);
+        }
+
+        const { data, error } = await query;
 
         if (error) {
             console.error('Error fetching sales:', error);
@@ -47,7 +54,12 @@ const SalesHistoryScreen: React.FC<SalesHistoryScreenProps> = ({ navigate }) => 
     };
 
     const fetchBuyers = async () => {
-        const { data } = await supabase.from('buyers').select('*');
+        const assocId = await resolveActiveAssociationId();
+        let query = supabase.from('buyers').select('*');
+        if (assocId) {
+            query = query.eq('association_id', assocId);
+        }
+        const { data } = await query;
         if (data) setBuyers(data);
     };
 
