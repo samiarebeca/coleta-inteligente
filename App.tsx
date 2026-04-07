@@ -21,6 +21,8 @@ import SalesHistoryScreen from './screens/SalesHistoryScreen';
 import MaterialsListScreen from './screens/MaterialsListScreen';
 import EntriesHistoryScreen from './screens/EntriesHistoryScreen';
 import BuyersListScreen from './screens/BuyersListScreen';
+import ExpenseRegistration from './screens/ExpenseRegistration';
+import PartnerRegistration from './screens/PartnerRegistration';
 
 export type Screen =
   | 'LOGIN'
@@ -44,6 +46,8 @@ export type Screen =
   | 'MATERIALS_LIST'
   | 'ENTRIES_HISTORY'
   | 'BUYERS_LIST'
+  | 'EXPENSE_REG'
+  | 'PARTNER_REG'
   | 'SUCCESS_SPLASH';
 
 const App: React.FC = () => {
@@ -164,6 +168,8 @@ const App: React.FC = () => {
       case 'MATERIALS_LIST': return <MaterialsListScreen navigate={navigateTo} />;
       case 'ENTRIES_HISTORY': return <EntriesHistoryScreen navigate={navigateTo} />;
       case 'BUYERS_LIST': return <BuyersListScreen navigate={navigateTo} />;
+      case 'EXPENSE_REG': return <ExpenseRegistration navigate={navigateTo} onSuccess={goHome} />;
+      case 'PARTNER_REG': return <PartnerRegistration navigate={navigateTo} />;
       default: return <LoginScreen onLogin={handleLogin} />;
     }
   };

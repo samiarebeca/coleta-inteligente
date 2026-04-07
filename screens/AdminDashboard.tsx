@@ -162,19 +162,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ navigate, userName, use
             {[
               { id: 'ENTRY_REG', label: 'Registrar Entrada', icon: 'move_to_inbox' },
               { id: 'SALE_REG', label: 'Registrar Venda', icon: 'point_of_sale' },
+              { id: 'EXPENSE_REG', label: 'Registrar Despesa', icon: 'payments' },
+              { id: 'PARTNER_REG', label: 'Cadastrar Parceiros', icon: 'groups' },
               { id: 'BUYER_REG', label: 'Cadastrar Compradores', icon: 'person_add' },
               { id: 'MATERIAL_REG', label: 'Cadastrar Materiais', icon: 'recycling' },
-              { id: 'ROUTES_MAP', label: 'Rotas de Coleta', icon: 'local_shipping', disabled: true },
+              { id: 'ROUTES_MAP', label: 'Rotas de Coleta', icon: 'local_shipping' },
               { id: 'REPORTS', label: 'Relatórios', icon: 'bar_chart' },
             ].map((action) => (
               <button
                 key={action.id}
-                onClick={() => !action.disabled && navigate(action.id as Screen)}
-                disabled={action.disabled}
-                className={`flex flex-col items-center gap-3 p-5 rounded-2xl bg-white shadow-sm border border-gray-100 group transition-all ${action.disabled
-                  ? 'opacity-50 cursor-not-allowed grayscale'
-                  : 'active:scale-95 hover:border-[#13ec6d]/30 hover:shadow-md hover:-translate-y-1'
-                  }`}
+                onClick={() => navigate(action.id as Screen)}
+                className="flex flex-col items-center gap-3 p-5 rounded-2xl bg-white shadow-sm border border-gray-100 group transition-all active:scale-95 hover:border-[#13ec6d]/30 hover:shadow-md hover:-translate-y-1"
               >
                 <div className="size-14 md:size-16 rounded-full bg-[#13ec6d]/10 flex items-center justify-center group-hover:bg-[#13ec6d]/20 transition-colors">
                   <span className="material-symbols-outlined text-[#13ec6d] text-[32px] md:text-[40px]">{action.icon}</span>

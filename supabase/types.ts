@@ -106,6 +106,44 @@ export type Database = {
         }
         Relationships: []
       }
+      expenses: {
+        Row: {
+          id: string
+          association_id: string
+          expense_date: string
+          expense_type: string
+          description: string
+          amount: number
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          association_id: string
+          expense_date?: string
+          expense_type: string
+          description: string
+          amount: number
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          association_id?: string
+          expense_date?: string
+          expense_type?: string
+          description?: string
+          amount?: number
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expenses_association_id_fkey"
+            columns: ["association_id"]
+            isOneToOne: false
+            referencedRelation: "associations"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       entries: {
         Row: {
           association_id: string | null
